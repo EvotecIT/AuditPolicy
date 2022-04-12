@@ -12,11 +12,11 @@ Locale: en-US
 
 ## AuditPolicy Cmdlets
 ### [Clear-SystemAuditPolicy](Clear-SystemAuditPolicy.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Get-SystemAuditPolicy](Get-SystemAuditPolicy.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 
 ### [Set-SystemAuditPolicy](Set-SystemAuditPolicy.md)
-{{ Fill in the Description }}
+{{ Fill in the Synopsis }}
 

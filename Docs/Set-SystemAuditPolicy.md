@@ -80,38 +80,6 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -AccountLogon
-{{ Fill AccountLogon Description }}
-
-```yaml
-Type: String
-Parameter Sets: AccountLogon
-Aliases:
-Accepted values: CredentialValidation, KerberosServiceTicketOperations, OtherAccountLogonEvents, KerberosAuthenticationService
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -AccountManagement
-{{ Fill AccountManagement Description }}
-
-```yaml
-Type: String
-Parameter Sets: AccountManagement
-Aliases:
-Accepted values: UserAccountManagement, ComputerAccountManagement, SecurityGroupManagement, DistributionGroupManagement, ApplicationGroupManagement, OtherAccountManagementEvents
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -ComputerName
 {{ Fill ComputerName Description }}
 
@@ -127,29 +95,28 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
+### -AccountLogon
+{{ Fill AccountLogon Description }}
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
+Type: String
+Parameter Sets: AccountLogon
+Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -DSAccess
-{{ Fill DSAccess Description }}
+### -AccountManagement
+{{ Fill AccountManagement Description }}
 
 ```yaml
 Type: String
-Parameter Sets: DSAccess
+Parameter Sets: AccountManagement
 Aliases:
-Accepted values: DirectoryServiceAccess, DirectoryServiceChanges, DirectoryServiceReplication, DetailedDirectoryServiceReplication
 
 Required: True
 Position: Named
@@ -165,7 +132,21 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: DetailedTracking
 Aliases:
-Accepted values: ProcessCreation, ProcessTermination, DPAPIActivity, RPCEvents, PNPActivity, TokenRightAdjusted
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DSAccess
+{{ Fill DSAccess Description }}
+
+```yaml
+Type: String
+Parameter Sets: DSAccess
+Aliases:
 
 Required: True
 Position: Named
@@ -181,7 +162,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: LogonLogoff
 Aliases:
-Accepted values: Logon, Logoff, AccountLockout, IPSecMainMode, SpecialLogon, IPSecQuickMode, IPSecExtendedMode, OtherLogonLogoffEvents, NetworkPolicyServer, UserDeviceClaims, GroupMembership
 
 Required: True
 Position: Named
@@ -197,7 +177,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: ObjectAccess
 Aliases:
-Accepted values: FileSystem, Registry, KernelObject, SAM, OtherObjectAccessEvents, CertificationServices, ApplicationGenerated, HandleManipulation, FileShare, FilteringPlatformPacketDrop, FilteringPlatformConnection, DetailedFileShare, RemovableStorage, CentralAccessPolicyStaging
 
 Required: True
 Position: Named
@@ -213,7 +192,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: PolicyChange
 Aliases:
-Accepted values: FileSystem, AuditPolicyChange, AuthenticationPolicyChange, AuthorizationPolicyChange, MPSSVCRuleLevelPolicyChange, FilteringPlatformPolicyChange, OtherPolicyChangeEvents
 
 Required: True
 Position: Named
@@ -229,7 +207,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: PrivilegeUse
 Aliases:
-Accepted values: SensitivePrivilegeUse, NonSensitivePrivilegeUse, OtherPrivilegeUseEvents
 
 Required: True
 Position: Named
@@ -245,7 +222,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: System
 Aliases:
-Accepted values: SecurityStateChange, SecuritySystemExtension, SystemIntegrity, IPsecDriver, OtherSystemEvents
 
 Required: True
 Position: Named
@@ -261,7 +237,6 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: (All)
 Aliases:
-Accepted values: NotConfigured, Success, Failure, SuccessAndFailure
 
 Required: True
 Position: Named
@@ -278,6 +253,21 @@ The cmdlet is not run.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
 
 Required: False
 Position: Named
