@@ -1,4 +1,62 @@
 ﻿function Set-SystemAuditPolicy {
+    <#
+    .SYNOPSIS
+    Sets the audit policy similary to what auditpol.exe does.
+
+    .DESCRIPTION
+    Sets the audit policy similary to what auditpol.exe does.
+
+    .PARAMETER ComputerName
+    ComputerName for remote system to clear audit policy from. Requires permissions on the destination.
+
+    .PARAMETER AccountLogon
+    Choose one of the options for the AccountLogon parameter.
+
+    .PARAMETER AccountManagement
+    Choose one of the options for the AccountManagement parameter.
+
+    .PARAMETER DetailedTracking
+    Choose one of the options for the DetailedTracking parameter.
+
+    .PARAMETER DSAccess
+    Choose one of the options for the DSAccess parameter.
+
+    .PARAMETER LogonLogoff
+    Choose one of the options for the LogonLogoff parameter.
+
+    .PARAMETER ObjectAccess
+    Choose one of the options for the ObjectAccess parameter.
+
+    .PARAMETER PolicyChange
+    Choose one of the options for the PolicyChange parameter.
+
+    .PARAMETER PrivilegeUse
+    Choose one of the options for the PrivilegeUse parameter.
+
+    .PARAMETER System
+    Choose one of the options for the System parameter.
+
+    .PARAMETER Value
+    Choose one of the options for the Value parameter.
+
+    .EXAMPLE
+    $WhatIf = $false
+
+    Set-SystemAuditPolicy -AccountLogon KerberosServiceTicketOperations -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon OtherAccountLogonEvents -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon KerberosAuthenticationService -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon CredentialValidation -Value Success -Verbose -WhatIf:$WhatIf
+
+    Set-SystemAuditPolicy -AccountManagement ComputerAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement ApplicationGroupManagement -Value Success -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement DistributionGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [string] $ComputerName,

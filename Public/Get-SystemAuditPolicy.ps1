@@ -1,4 +1,24 @@
 ﻿function Get-SystemAuditPolicy {
+    <#
+    .SYNOPSIS
+    Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
+
+    .DESCRIPTION
+    Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
+
+    .PARAMETER ComputerName
+    ComputerName for remote system to read audit policy from. Requires permissions on the destination.
+
+    .EXAMPLE
+    $AuditPolicies = Get-SystemAuditPolicy
+    $AuditPolicies | Format-Table
+    $AuditPolicies.AccountLogon | Format-Table
+    $AuditPolicies.AccountManagement | Format-Table
+    $AuditPolicies.DetailedTracking | Format-Table
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
         [string] $ComputerName

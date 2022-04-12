@@ -1,4 +1,20 @@
 ﻿function Clear-SystemAuditPolicy {
+    <#
+    .SYNOPSIS
+    Clears all audit policies to their default values (Not Configured)
+
+    .DESCRIPTION
+    Clears all audit policies to their default values (Not Configured)
+
+    .PARAMETER ComputerName
+    ComputerName for remote system to clear audit policy from. Requires permissions on the destination.
+
+    .EXAMPLE
+    Clear-SystemAuditPolicy -WhatIf
+
+    .NOTES
+    General notes
+    #>
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [string] $ComputerName
