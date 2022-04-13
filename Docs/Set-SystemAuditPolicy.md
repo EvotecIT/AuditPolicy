@@ -8,7 +8,7 @@ schema: 2.0.0
 # Set-SystemAuditPolicy
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Sets the audit policy similary to what auditpol.exe does.
 
 ## SYNTAX
 
@@ -67,21 +67,32 @@ Set-SystemAuditPolicy [-ComputerName <String>] -System <String> -Value <String> 
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Sets the audit policy similary to what auditpol.exe does.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
 ```
+$WhatIf = $false
 
-{{ Add example description here }}
 
+Set-SystemAuditPolicy -AccountLogon KerberosServiceTicketOperations -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon OtherAccountLogonEvents -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon KerberosAuthenticationService -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon CredentialValidation -Value Success -Verbose -WhatIf:$WhatIf
+
+Set-SystemAuditPolicy -AccountManagement ComputerAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement ApplicationGroupManagement -Value Success -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement DistributionGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+```
 ## PARAMETERS
 
 ### -ComputerName
-{{ Fill ComputerName Description }}
+ComputerName for remote system to clear audit policy from.
+Requires permissions on the destination.
 
 ```yaml
 Type: String
@@ -96,7 +107,7 @@ Accept wildcard characters: False
 ```
 
 ### -AccountLogon
-{{ Fill AccountLogon Description }}
+Choose one of the options for the AccountLogon parameter.
 
 ```yaml
 Type: String
@@ -111,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -AccountManagement
-{{ Fill AccountManagement Description }}
+Choose one of the options for the AccountManagement parameter.
 
 ```yaml
 Type: String
@@ -126,7 +137,7 @@ Accept wildcard characters: False
 ```
 
 ### -DetailedTracking
-{{ Fill DetailedTracking Description }}
+Choose one of the options for the DetailedTracking parameter.
 
 ```yaml
 Type: String
@@ -141,7 +152,7 @@ Accept wildcard characters: False
 ```
 
 ### -DSAccess
-{{ Fill DSAccess Description }}
+Choose one of the options for the DSAccess parameter.
 
 ```yaml
 Type: String
@@ -156,7 +167,7 @@ Accept wildcard characters: False
 ```
 
 ### -LogonLogoff
-{{ Fill LogonLogoff Description }}
+Choose one of the options for the LogonLogoff parameter.
 
 ```yaml
 Type: String
@@ -171,7 +182,7 @@ Accept wildcard characters: False
 ```
 
 ### -ObjectAccess
-{{ Fill ObjectAccess Description }}
+Choose one of the options for the ObjectAccess parameter.
 
 ```yaml
 Type: String
@@ -186,7 +197,7 @@ Accept wildcard characters: False
 ```
 
 ### -PolicyChange
-{{ Fill PolicyChange Description }}
+Choose one of the options for the PolicyChange parameter.
 
 ```yaml
 Type: String
@@ -201,7 +212,7 @@ Accept wildcard characters: False
 ```
 
 ### -PrivilegeUse
-{{ Fill PrivilegeUse Description }}
+Choose one of the options for the PrivilegeUse parameter.
 
 ```yaml
 Type: String
@@ -216,7 +227,7 @@ Accept wildcard characters: False
 ```
 
 ### -System
-{{ Fill System Description }}
+Choose one of the options for the System parameter.
 
 ```yaml
 Type: String
@@ -231,7 +242,7 @@ Accept wildcard characters: False
 ```
 
 ### -Value
-{{ Fill Value Description }}
+Choose one of the options for the Value parameter.
 
 ```yaml
 Type: String
@@ -281,11 +292,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

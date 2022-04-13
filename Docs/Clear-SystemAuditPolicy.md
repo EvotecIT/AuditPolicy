@@ -8,7 +8,7 @@ schema: 2.0.0
 # Clear-SystemAuditPolicy
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Clears all audit policies to their default values (Not Configured)
 
 ## SYNTAX
 
@@ -17,21 +17,20 @@ Clear-SystemAuditPolicy [[-ComputerName] <String>] [-WhatIf] [-Confirm] [<Common
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Clears all audit policies to their default values (Not Configured)
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
 ```
-
-{{ Add example description here }}
+Clear-SystemAuditPolicy -WhatIf
+```
 
 ## PARAMETERS
 
 ### -ComputerName
-{{ Fill ComputerName Description }}
+ComputerName for remote system to clear audit policy from.
+Requires permissions on the destination.
 
 ```yaml
 Type: String
@@ -81,11 +80,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

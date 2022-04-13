@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-SystemAuditPolicy
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
 
 ## SYNTAX
 
@@ -17,21 +17,25 @@ Get-SystemAuditPolicy [[-ComputerName] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+$AuditPolicies = Get-SystemAuditPolicy
 ```
 
-{{ Add example description here }}
+$AuditPolicies | Format-Table
+$AuditPolicies.AccountLogon | Format-Table
+$AuditPolicies.AccountManagement | Format-Table
+$AuditPolicies.DetailedTracking | Format-Table
 
 ## PARAMETERS
 
 ### -ComputerName
-{{ Fill ComputerName Description }}
+ComputerName for remote system to read audit policy from.
+Requires permissions on the destination.
 
 ```yaml
 Type: String
@@ -50,11 +54,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

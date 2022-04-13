@@ -1,9 +1,9 @@
 ---
 Module Name: AuditPolicy
-Module Guid: 14651643-e1f8-4123-9250-9ed210b86963
+Module Guid: {{ Update Module Guid }}
 Download Help Link: {{ Update Download Link }}
-Help Version: {{ Please enter version of help manually (X.X.X.X) format }}
-Locale: en-US
+Help Version: {{ Update Help Version }}
+Locale: {{ Update Locale }}
 ---
 
 # AuditPolicy Module
@@ -12,11 +12,14 @@ Locale: en-US
 
 ## AuditPolicy Cmdlets
 ### [Clear-SystemAuditPolicy](Clear-SystemAuditPolicy.md)
-{{ Fill in the Synopsis }}
+Clears all audit policies to their default values (Not Configured)
 
 ### [Get-SystemAuditPolicy](Get-SystemAuditPolicy.md)
-{{ Fill in the Synopsis }}
+Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
 
 ### [Set-SystemAuditPolicy](Set-SystemAuditPolicy.md)
+Sets the audit policy similary to what auditpol.exe does.
+
+### [Set-SystemAuditPolicyPermissions](Set-SystemAuditPolicyPermissions.md)
 {{ Fill in the Synopsis }}
 
