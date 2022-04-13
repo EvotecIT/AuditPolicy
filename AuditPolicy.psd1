@@ -6,9 +6,9 @@
     CompatiblePSEditions = @('Desktop', 'Core')
     Copyright            = '(c) 2011 - 2022 Przemyslaw Klys @ Evotec. All rights reserved.'
     Description          = 'Module that replaces auditpol.exe with a custom version that can be used to audit or make changes to the Windows Security Policy.'
-    FunctionsToExport    = @('Clear-SystemAuditPolicy', 'Get-SystemAuditPolicy', 'Set-SystemAuditPolicy')
+    FunctionsToExport    = @('Clear-SystemAuditPolicy', 'Get-SystemAuditPolicy', 'Set-SystemAuditPolicy', 'Set-SystemAuditPolicyPermissions')
     GUID                 = '14651643-e1f8-4123-9250-9ed210b86963'
-    ModuleVersion        = '0.0.1'
+    ModuleVersion        = '0.0.2'
     PowerShellVersion    = '5.1'
     PrivateData          = @{
         PSData = @{
