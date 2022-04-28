@@ -1,9 +1,9 @@
 ---
 Module Name: AuditPolicy
-Module Guid: {{ Update Module Guid }}
+Module Guid: 14651643-e1f8-4123-9250-9ed210b86963
 Download Help Link: {{ Update Download Link }}
-Help Version: {{ Update Help Version }}
-Locale: {{ Update Locale }}
+Help Version: {{ Please enter version of help manually (X.X.X.X) format }}
+Locale: en-US
 ---
 
 # AuditPolicy Module
@@ -21,7 +21,7 @@ Clears all audit policies to their default values (Not Configured)
 Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
 
 ### [Remove-SystemAuditPolicyPermissions](Remove-SystemAuditPolicyPermissions.md)
-{{ Fill in the Synopsis }}
+Removes audit policy permissions from a user or group.
 
 ### [Restore-SystemAuditPolicy](Restore-SystemAuditPolicy.md)
 {{ Fill in the Synopsis }}
@@ -33,5 +33,5 @@ Sets the audit policy similary to what auditpol.exe does.
 {{ Fill in the Synopsis }}
 
 ### [Set-SystemAuditPolicyPermissions](Set-SystemAuditPolicyPermissions.md)
-{{ Fill in the Synopsis }}
+This function will set the audit policy permissions for the specified user or group to FullControl.
 

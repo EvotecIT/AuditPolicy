@@ -8,7 +8,7 @@ schema: 2.0.0
 # Set-SystemAuditPolicyPermissions
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+This function will set the audit policy permissions for the specified user or group to FullControl.
 
 ## SYNTAX
 
@@ -18,21 +18,21 @@ Set-SystemAuditPolicyPermissions [-Identity] <String> [[-Permissions] <RegistryR
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+This function will set the audit policy permissions for the specified user or group to FullControl.
+By default only SYSTEM account has any permission.
+This command can be used to add audit policy permissions for the specified user or group.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
 ```
-
-{{ Add example description here }}
+An example
+```
 
 ## PARAMETERS
 
 ### -Identity
-{{ Fill Identity Description }}
+The identity of the user or group to set the audit policy permissions for
 
 ```yaml
 Type: String
@@ -47,7 +47,8 @@ Accept wildcard characters: False
 ```
 
 ### -Permissions
-The permissions to set for the specified user or group. By default FullControl.
+The permissions to set for the specified user or group.
+By default FullControl.
 
 ```yaml
 Type: RegistryRights
@@ -63,7 +64,8 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Shows what would happen if the cmdlet runs. The cmdlet is not run.
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
 
 ```yaml
 Type: SwitchParameter
@@ -97,11 +99,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

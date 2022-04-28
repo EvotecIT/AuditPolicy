@@ -8,7 +8,7 @@ schema: 2.0.0
 # Remove-SystemAuditPolicyPermissions
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Removes audit policy permissions from a user or group.
 
 ## SYNTAX
 
@@ -18,21 +18,21 @@ Remove-SystemAuditPolicyPermissions [-Identity] <String> [[-Permissions] <Regist
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Removes audit policy permissions from a user or group.
+By default only SYSTEM account has any permissions.
+This command can be used to remove audit policy permissions from a user or group.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
 ```
-
-{{ Add example description here }}
+Remove-SystemAuditPolicyPermissions -Identity "przemyslaw.klys" -Verbose -WhatIf
+```
 
 ## PARAMETERS
 
 ### -Identity
-{{ Fill Identity Description }}
+Specifies the user or group to remove audit policy permissions from.
 
 ```yaml
 Type: String
@@ -47,7 +47,8 @@ Accept wildcard characters: False
 ```
 
 ### -Permissions
-Specifies the audit policy permissions to remove. By default FullControl
+Specifies the audit policy permissions to remove.
+By default FullControl
 
 ```yaml
 Type: RegistryRights
@@ -63,7 +64,8 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Shows what would happen if the cmdlet runs. The cmdlet is not run.
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
 
 ```yaml
 Type: SwitchParameter
@@ -97,11 +99,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

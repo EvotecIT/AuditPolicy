@@ -74,7 +74,7 @@ Sets the audit policy similary to what auditpol.exe does.
 ### EXAMPLE 1
 ```
 $WhatIf = $false
-
+```
 
 Set-SystemAuditPolicy -AccountLogon KerberosServiceTicketOperations -Value Failure -Verbose -WhatIf:$WhatIf
 Set-SystemAuditPolicy -AccountLogon OtherAccountLogonEvents -Value Failure -Verbose -WhatIf:$WhatIf
@@ -87,7 +87,6 @@ Set-SystemAuditPolicy -AccountManagement DistributionGroupManagement -Value Fail
 Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Failure -Verbose -WhatIf:$WhatIf
 Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
 Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
-```
 
 ## PARAMETERS
 
