@@ -88,6 +88,7 @@ Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Fai
 Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
 Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
 ```
+
 ## PARAMETERS
 
 ### -ComputerName
