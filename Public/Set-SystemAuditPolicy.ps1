@@ -9,6 +9,9 @@
     .PARAMETER ComputerName
     ComputerName for remote system to clear audit policy from. Requires permissions on the destination.
 
+    .PARAMETER Policies
+    The policies to set from all categories
+
     .PARAMETER AccountLogon
     Choose one of the options for the AccountLogon parameter.
 
@@ -39,115 +42,195 @@
     .PARAMETER Value
     Choose one of the options for the Value parameter.
 
+    .PARAMETER UseAuditPol
+    Forces use of AuditPol.exe instead of registry approach
+
+    .PARAMETER Suppress
+    Suppresses the output of the command
+
     .EXAMPLE
     $WhatIf = $false
 
-    Set-SystemAuditPolicy -AccountLogon KerberosServiceTicketOperations -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountLogon OtherAccountLogonEvents -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountLogon KerberosAuthenticationService -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountLogon CredentialValidation -Value Success -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon 'Kerberos Service Ticket Operations' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon 'Other AccountLogon Events' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon 'Kerberos Authentication Service' -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountLogon 'Credential Validation' -Value Success -Verbose -WhatIf:$WhatIf
 
-    Set-SystemAuditPolicy -AccountManagement ComputerAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountManagement ApplicationGroupManagement -Value Success -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountManagement DistributionGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
-    Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'Computer Account Management' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'Application Group Management' -Value Success -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'Distribution Group Management' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'Other Account ManagementEvents' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'Security Group Management' -Value Failure -Verbose -WhatIf:$WhatIf
+    Set-SystemAuditPolicy -AccountManagement 'User Account Management' -Value Failure -Verbose -WhatIf:$WhatIf
 
     .NOTES
     General notes
     #>
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'AllPolicies')]
     param(
         [string] $ComputerName,
+        [parameter(Mandatory, ParameterSetName = 'AllPolicies')]
+        [ValidateSet(
+            #System
+            "Security System Extension",
+            "System Integrity",
+            "IPsec Driver",
+            "Other System Events",
+            "Security State Change",
+            #Logon/Logoff#
+            "Logon",
+            "Logoff",
+            "Account Lockout",
+            "IPsec Main Mode",
+            "IPsec Quick Mode",
+            "IPsec Extended Mode",
+            "Special Logon",
+            "Other Logon/Logoff Events",
+            "Network Policy Server",
+            "User / Device Claims",
+            "Group Membership",
+            # Object Access#
+            "File System",
+            "Registry",
+            "Kernel Object",
+            "SAM",
+            "Certification Services",
+            "Application Generated",
+            "Handle Manipulation",
+            "File Share",
+            "Filtering Platform Packet Drop",
+            "Filtering Platform Connection",
+            "Other Object Access Events",
+            "Detailed File Share",
+            "Removable Storage",
+            "Central Policy Staging",
+            #Privilege Use#
+            "Non Sensitive Privilege Use",
+            "Other Privilege Use Events",
+            "Sensitive Privilege Use",
+            #Detailed Tracking#
+            "Process Creation",
+            "Process Termination",
+            "DPAPI Activity",
+            "RPC Events",
+            "Plug and Play Events",
+            "Token Right Adjusted Events",
+            #Policy Change#
+            "Audit Policy Change",
+            "Authentication Policy Change",
+            "Authorization Policy Change",
+            "MPSSVC Rule-Level Policy Change",
+            "Filtering Platform Policy Change",
+            "Other Policy Change Events",
+            #Account Management#
+            "Computer Account Management",
+            "Security Group Management",
+            "Distribution Group Management",
+            "Application Group Management",
+            "Other Account Management Events",
+            "User Account Management",
+            #DS Access#
+            "Directory Service Access",
+            "Directory Service Changes",
+            "Directory Service Replication",
+            "Detailed Directory Service Replication",
+            #Account Logon#
+            "Kerberos Service Ticket Operations",
+            "Kerberos Service Ticket Operations",
+            "Other Account Logon Events",
+            "Kerberos Authentication Service",
+            "Credential Validation"
+        )][string] $Policies,
+
         [parameter(Mandatory, ParameterSetName = 'AccountLogon')][ValidateSet(
-            'CredentialValidation',
-            'KerberosServiceTicketOperations',
-            'OtherAccountLogonEvents',
-            'KerberosAuthenticationService'
+            'Credential Validation',
+            'Kerberos Service Ticket Operations',
+            'Other Account Logon Events',
+            'Kerberos Authentication Service'
         )][string] $AccountLogon,
 
         [parameter(Mandatory, ParameterSetName = 'AccountManagement')][ValidateSet(
-            'UserAccountManagement',
-            'ComputerAccountManagement',
-            'SecurityGroupManagement',
-            'DistributionGroupManagement',
-            'ApplicationGroupManagement',
-            'OtherAccountManagementEvents'
+            'User Account Management',
+            'Computer Account Management',
+            'Security Group Management',
+            'Distribution Group Management',
+            'Application Group Management',
+            'Other Account Management Events'
         )][string] $AccountManagement,
 
         [parameter(Mandatory, ParameterSetName = 'DetailedTracking')][ValidateSet(
-            'ProcessCreation',
-            'ProcessTermination',
-            'DPAPIActivity' ,
-            'RPCEvents' ,
-            'PNPActivity' ,
-            'TokenRightAdjusted'
+            'Process Creation',
+            'Process Termination',
+            'DPAPI Activity',
+            'RPC Events',
+            'Plug and Play Events',
+            'Token Right Adjusted Events'
         )][string] $DetailedTracking,
 
         [parameter(Mandatory, ParameterSetName = 'DSAccess')][ValidateSet(
-            'DirectoryServiceAccess',
-            'DirectoryServiceChanges',
-            'DirectoryServiceReplication',
-            'DetailedDirectoryServiceReplication'
+            'Directory Service Access',
+            'Directory Service Changes',
+            'Directory Service Replication',
+            'Detailed Directory Service Replication'
         )][string] $DSAccess,
 
         [parameter(Mandatory, ParameterSetName = 'LogonLogoff')][ValidateSet(
             'Logon',
             'Logoff',
-            'AccountLockout',
-            'IPSecMainMode',
-            'SpecialLogon',
-            'IPSecQuickMode',
-            'IPSecExtendedMode',
-            'OtherLogonLogoffEvents',
-            'NetworkPolicyServer',
-            'UserDeviceClaims',
-            'GroupMembership'
+            'Account Lockout',
+            'IPSec Main Mode',
+            'Special Logon',
+            'IPSec Quick Mode',
+            'IPSec Extended Mode',
+            'Other Logon/Logoff Events',
+            'Network Policy Server',
+            'User / Device Claims',
+            'Group Membership'
         )][string] $LogonLogoff,
 
         [parameter(Mandatory, ParameterSetName = 'ObjectAccess')][ValidateSet(
-            'FileSystem',
+            'File System',
             'Registry',
-            'KernelObject',
+            'Kernel Object',
             'SAM',
-            'OtherObjectAccessEvents',
-            'CertificationServices',
-            'ApplicationGenerated',
-            'HandleManipulation',
-            'FileShare',
-            'FilteringPlatformPacketDrop',
-            'FilteringPlatformConnection',
-            'DetailedFileShare',
-            'RemovableStorage',
-            'CentralAccessPolicyStaging'
+            'Other Object Access Events',
+            'Certification Services',
+            'Application Generated',
+            'Handle Manipulation',
+            'File Share',
+            'Filtering Platform Packet Drop',
+            'Filtering Platform Connection',
+            'Detailed File Share',
+            'Removable Storage',
+            'Central Policy Staging'
         )][string] $ObjectAccess,
 
         [parameter(Mandatory, ParameterSetName = 'PolicyChange')][ValidateSet(
-            'FileSystem',
-            'AuditPolicyChange',
-            'AuthenticationPolicyChange',
-            'AuthorizationPolicyChange',
-            'MPSSVCRuleLevelPolicyChange',
-            'FilteringPlatformPolicyChange',
-            'OtherPolicyChangeEvents'
+            'Audit Policy Change',
+            'Authentication Policy Change',
+            'Authorization Policy Change',
+            'MPSSVC Rule-Level Policy Change',
+            'Filtering Platform Policy Change',
+            'Other Policy Change Events'
         )][string] $PolicyChange,
 
         [parameter(Mandatory, ParameterSetName = 'PrivilegeUse')][ValidateSet(
-            'SensitivePrivilegeUse',
-            'NonSensitivePrivilegeUse',
-            'OtherPrivilegeUseEvents'
+            'Sensitive Privilege Use',
+            'Non Sensitive Privilege Use',
+            'Other Privilege Use Events'
         )][string] $PrivilegeUse,
 
         [parameter(Mandatory, ParameterSetName = 'System')][ValidateSet(
-            'SecurityStateChange',
-            'SecuritySystemExtension',
-            'SystemIntegrity',
-            'IPsecDriver',
-            'OtherSystemEvents'
+            'Security State Change',
+            'Security System Extension',
+            'System Integrity',
+            'IPsec Driver',
+            'Other System Events'
         )][string] $System,
 
-        [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value
+        [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value,
+        [switch] $UseAuditPol,
+        [switch] $Suppress
     )
 
     Add-Type -TypeDefinition @"
@@ -172,81 +255,81 @@
     }
     $AuditPoliciesByte = [ordered] @{
         AccountLogon      = [ordered] @{
-            'CredentialValidation'            = 122
-            'KerberosServiceTicketOperations' = 124
-            'OtherAccountLogonEvents'         = 126
-            'KerberosAuthenticationService'   = 128
+            'Credential Validation'              = 122
+            'Kerberos Service Ticket Operations' = 124
+            'Other Account Logon Events'         = 126
+            'Kerberos Authentication Service'    = 128
         }
         AccountManagement = [ordered] @{
-            'UserAccountManagement'        = 102
-            'ComputerAccountManagement'    = 104
-            'SecurityGroupManagement'      = 106
-            'DistributionGroupManagement'  = 108
-            'ApplicationGroupManagement'   = 110
-            'OtherAccountManagementEvents' = 112
+            'User Account Management'         = 102
+            'Computer Account Management'     = 104
+            'Security Group Management'       = 106
+            'Distribution Group Management'   = 108
+            'Application Group Management'    = 110
+            'Other Account Management Events' = 112
         }
         DetailedTracking  = [ordered] @{
-            'ProcessCreation'    = 78
-            'ProcessTermination' = 80
-            'DPAPIActivity'      = 82
-            'RPCEvents'          = 84
-            'PNPActivity'        = 86
-            'TokenRightAdjusted' = 88
+            'Process Creation'            = 78
+            'Process Termination'         = 80
+            'DPAPI Activity'              = 82
+            'RPC Events'                  = 84
+            'Plug and Play Events'        = 86
+            'Token Right Adjusted Events' = 88
         }
         DSAccess          = [ordered] @{
-            'DirectoryServiceAccess'              = 114
-            'DirectoryServiceChanges'             = 116
-            'DirectoryServiceReplication'         = 118
-            'DetailedDirectoryServiceReplication' = 120
+            'Directory Service Access'               = 114
+            'Directory Service Changes'              = 116
+            'Directory Service Replication'          = 118
+            'Detailed Directory Service Replication' = 120
         }
         LogonLogoff       = [ordered] @{
-            'Logon'                  = 22
-            'Logoff'                 = 24
-            'AccountLockout'         = 26
-            'IPSecMainMode'          = 28
-            'SpecialLogon'           = 30
-            'IPSecQuickMode'         = 32
-            'IPSecExtendedMode'      = 34
-            'OtherLogonLogoffEvents' = 36
-            'NetworkPolicyServer'    = 38
-            'UserDeviceClaims'       = 40
-            'GroupMembership'        = 42
+            'Logon'                     = 22
+            'Logoff'                    = 24
+            'Account Lockout'           = 26
+            'IPSec Main Mode'           = 28
+            'Special Logon'             = 30
+            'IPSec Quick Mode'          = 32
+            'IPSec Extended Mode'       = 34
+            'Other Logon/Logoff Events' = 36
+            'Network Policy Server'     = 38
+            'User / Device Claims'      = 40
+            'Group Membership'          = 42
         }
         ObjectAccess      = [ordered] @{
-            'FileSystem'                  = 44
-            'Registry'                    = 46
-            'KernelObject'                = 48
-            'SAM'                         = 50
-            'OtherObjectAccessEvents'     = 52
-            'CertificationServices'       = 54
-            'ApplicationGenerated'        = 56
-            'HandleManipulation'          = 58
-            'FileShare'                   = 60
-            'FilteringPlatformPacketDrop' = 62
-            'FilteringPlatformConnection' = 64
-            'DetailedFileShare'           = 66
-            'RemovableStorage'            = 68
-            'CentralAccessPolicyStaging'  = 70
+            'File System'                    = 44
+            'Registry'                       = 46
+            'Kernel Object'                  = 48
+            'SAM'                            = 50
+            'Other Object Access Events'     = 52
+            'Certification Services'         = 54
+            'Application Generated'          = 56
+            'Handle Manipulation'            = 58
+            'File Share'                     = 60
+            'Filtering Platform Packet Drop' = 62
+            'Filtering Platform Connection'  = 64
+            'Detailed File Share'            = 66
+            'Removable Storage'              = 68
+            'Central Policy Staging'         = 70
         }
         PolicyChange      = [ordered] @{
-            'AuditPolicyChange'             = 90
-            'AuthenticationPolicyChange'    = 92
-            'AuthorizationPolicyChange'     = 94
-            'MPSSVCRuleLevelPolicyChange'   = 96
-            'FilteringPlatformPolicyChange' = 98
-            'OtherPolicyChangeEvents'       = 100
+            'Audit Policy Change'              = 90
+            'Authentication Policy Change'     = 92
+            'Authorization Policy Change'      = 94
+            'MPSSVC Rule-Level Policy Change'  = 96
+            'Filtering Platform Policy Change' = 98
+            'Other Policy Change Events'       = 100
         }
         PrivilegeUse      = [ordered] @{
-            'SensitivePrivilegeUse'    = 72
-            'NonSensitivePrivilegeUse' = 74
-            'OtherPrivilegeUseEvents'  = 76
+            'Sensitive Privilege Use'     = 72
+            'Non Sensitive Privilege Use' = 74
+            'Other Privilege Use Events'  = 76
         }
         System            = [ordered] @{
-            'SecurityStateChange'     = 12
-            'SecuritySystemExtension' = 14
-            'SystemIntegrity'         = 16
-            'IPsecDriver'             = 18
-            'OtherSystemEvents'       = 20
+            'Security State Change'     = 12
+            'Security System Extension' = 14
+            'System Integrity'          = 16
+            'IPsec Driver'              = 18
+            'Other System Events'       = 20
         }
     }
 
@@ -254,33 +337,70 @@
     if ($Audit.PSConnection -eq $true -and $Audit.PSError -eq $false) {
 
     } else {
-        Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
+        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            throw $($Audit.PSErrorMessage)
+        } else {
+            Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
+        }
         return
     }
 
-    $BoundParameters = $PSBoundParameters
-    $CurrentParameterSet = $PsCmdlet.ParameterSetName
-    $ChosenParameter = $BoundParameters.$CurrentParameterSet
+    if (-not $UseAuditPol) {
+        $BoundParameters = $PSBoundParameters
+        $CurrentParameterSet = $PsCmdlet.ParameterSetName
+        $ChosenParameter = $BoundParameters.$CurrentParameterSet
 
-    if ($CurrentParameterSet) {
-        $ByteNumber = $AuditPoliciesByte[$CurrentParameterSet][$ChosenParameter]
-        $ExpectedValue = $AuditValues[$Value]
+        if ($CurrentParameterSet) {
+            if ($CurrentParameterSet -eq 'AllPolicies') {
+                foreach ($Key in $AuditPoliciesByte.Keys) {
+                    if ($AuditPoliciesByte[$Key][$Policy]) {
+                        $ByteNumber = $AuditPoliciesByte[$Key][$Policy]
+                        $CurrentParameterSet = $Key
+                        $ChosenParameter = $Policy
+                        break
+                    }
+                }
+            } else {
+                $ByteNumber = $AuditPoliciesByte[$CurrentParameterSet][$ChosenParameter]
+            }
+            $ExpectedValue = $AuditValues[$Value]
 
-        $CurrentValue = $Audit.PSValue[$ByteNumber]
-        $CurrentTranslatedValue = [AuditPolicies.Events] $CurrentValue
-        $ExpectedTranslatedValue = [AuditPolicies.Events] $ExpectedValue
+            $CurrentValue = $Audit.PSValue[$ByteNumber]
+            $CurrentTranslatedValue = [AuditPolicies.Events] $CurrentValue
+            $ExpectedTranslatedValue = [AuditPolicies.Events] $ExpectedValue
 
-        Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter is $CurrentTranslatedValue ($CurrentValue) to be replaced with $ExpectedTranslatedValue ($ExpectedValue)"
-        if ($CurrentTranslatedValue -ne $ExpectedTranslatedValue) {
-            # we get value from registry as is
-            $ValueToSet = $Audit.PSValue
-            # and then we modify single byte
-            $ValueToSet[$ByteNumber] = $ExpectedValue
-            # and set it back to registry
-            $AuditOutput = Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName -Type None -Value $ValueToSet -WhatIf:$WhatIfPreference
-            $AuditOutput
-        } else {
-            Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
+            Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter is $CurrentTranslatedValue ($CurrentValue) to be replaced with $ExpectedTranslatedValue ($ExpectedValue)"
+            if ($CurrentTranslatedValue -ne $ExpectedTranslatedValue) {
+                # we get value from registry as is
+                $ValueToSet = $Audit.PSValue
+                # and then we modify single byte
+                $ValueToSet[$ByteNumber] = $ExpectedValue
+                # and set it back to registry
+                $AuditOutput = Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName -Type None -Value $ValueToSet -WhatIf:$WhatIfPreference
+                if ($AuditOutput.PSConnection -eq $true -and $AuditOutput.PSError -eq $false) {
+                    $Result = 'Success'
+                } else {
+                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                        throw $($AuditOutput.PSErrorMessage)
+                    } else {
+                        Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be set because: $($AuditOutput.PSErrorMessage)"
+                    }
+                    $Result = 'Failed'
+                }
+            } else {
+                $Result = 'Not required'
+                Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
+            }
         }
+        if (-not $Suppress) {
+            [PSCustomObject] @{
+                'Policy' = $ChosenParameter
+                'Value'  = $ExpectedTranslatedValue
+                'Result' = $Result
+                'Error'  = $($AuditOutput.PSErrorMessage)
+            }
+        }
+    } else {
+        Set-SystemAuditPolicyAuditpol -Policies $Policies -Value $Value -WhatIf:$WhatIfPreference
     }
 }

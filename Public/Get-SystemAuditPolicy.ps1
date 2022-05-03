@@ -9,6 +9,9 @@
     .PARAMETER ComputerName
     ComputerName for remote system to read audit policy from. Requires permissions on the destination.
 
+    .PARAMETER Categories
+    Forces display in category view
+
     .EXAMPLE
     $AuditPolicies = Get-SystemAuditPolicy
     $AuditPolicies | Format-Table
@@ -21,7 +24,8 @@
     #>
     [CmdletBinding()]
     param(
-        [string] $ComputerName
+        [string] $ComputerName,
+        [switch] $Categories
     )
 
     Add-Type -TypeDefinition @"
@@ -43,85 +47,95 @@
         $Data = $Audit.PSValue
 
         $AuditPolicies = [ordered] @{
-            AccountLogon      = [ordered] @{
-                'CredentialValidation'            = [AuditPolicies.Events] $Data[122]
-                'KerberosServiceTicketOperations' = [AuditPolicies.Events] $Data[124]
-                'OtherAccountLogonEvents'         = [AuditPolicies.Events] $Data[126]
-                'KerberosAuthenticationService'   = [AuditPolicies.Events] $Data[128]
-            }
-            AccountManagement = [ordered] @{
-                'UserAccountManagement'        = [AuditPolicies.Events] $Data[102]
-                'ComputerAccountManagement'    = [AuditPolicies.Events] $Data[104]
-                'SecurityGroupManagement'      = [AuditPolicies.Events] $Data[106]
-                'DistributionGroupManagement'  = [AuditPolicies.Events] $Data[108]
-                'ApplicationGroupManagement'   = [AuditPolicies.Events] $Data[110]
-                'OtherAccountManagementEvents' = [AuditPolicies.Events] $Data[112]
-            }
-            DetailedTracking  = [ordered] @{
-                'ProcessCreation'    = [AuditPolicies.Events] $Data[78]
-                'ProcessTermination' = [AuditPolicies.Events] $Data[80]
-                'DPAPIActivity'      = [AuditPolicies.Events] $Data[82]
-                'RPCEvents'          = [AuditPolicies.Events] $Data[84]
-                'PNPActivity'        = [AuditPolicies.Events] $Data[86]
-                'TokenRightAdjusted' = [AuditPolicies.Events] $Data[88]
-            }
-            DSAccess          = [ordered] @{
-                'DirectoryServiceAccess'              = [AuditPolicies.Events] $Data[114]
-                'DirectoryServiceChanges'             = [AuditPolicies.Events] $Data[116]
-                'DirectoryServiceReplication'         = [AuditPolicies.Events] $Data[118]
-                'DetailedDirectoryServiceReplication' = [AuditPolicies.Events] $Data[120]
+            System            = [ordered] @{
+                'Security State Change'     = [AuditPolicies.Events] $Data[12]
+                'Security System Extension' = [AuditPolicies.Events] $Data[14]
+                'System Integrity'          = [AuditPolicies.Events] $Data[16]
+                'IPsec Driver'              = [AuditPolicies.Events] $Data[18]
+                'Other System Events'       = [AuditPolicies.Events] $Data[20]
             }
             LogonLogoff       = [ordered] @{
-                'Logon'                  = [AuditPolicies.Events] $Data[22]
-                'Logoff'                 = [AuditPolicies.Events] $Data[24]
-                'AccountLockout'         = [AuditPolicies.Events] $Data[26]
-                'IPSecMainMode'          = [AuditPolicies.Events] $Data[28]
-                'SpecialLogon'           = [AuditPolicies.Events] $Data[30]
-                'IPSecQuickMode'         = [AuditPolicies.Events] $Data[32]
-                'IPSecExtendedMode'      = [AuditPolicies.Events] $Data[34]
-                'OtherLogonLogoffEvents' = [AuditPolicies.Events] $Data[36]
-                'NetworkPolicyServer'    = [AuditPolicies.Events] $Data[38]
-                'UserDeviceClaims'       = [AuditPolicies.Events] $Data[40]
-                'GroupMembership'        = [AuditPolicies.Events] $Data[42]
+                'Logon'                     = [AuditPolicies.Events] $Data[22]
+                'Logoff'                    = [AuditPolicies.Events] $Data[24]
+                'Account Lockout'           = [AuditPolicies.Events] $Data[26]
+                'IPSec Main Mode'           = [AuditPolicies.Events] $Data[28]
+                'Special Logon'             = [AuditPolicies.Events] $Data[30]
+                'IPSec Quick Mode'          = [AuditPolicies.Events] $Data[32]
+                'IPSec Extended Mode'       = [AuditPolicies.Events] $Data[34]
+                'Other Logon/Logoff Events' = [AuditPolicies.Events] $Data[36]
+                'Network Policy Server'     = [AuditPolicies.Events] $Data[38]
+                'User / Device Claims'      = [AuditPolicies.Events] $Data[40]
+                'Group Membership'          = [AuditPolicies.Events] $Data[42]
             }
             ObjectAccess      = [ordered] @{
-                'FileSystem'                  = [AuditPolicies.Events] $Data[44]
-                'Registry'                    = [AuditPolicies.Events] $Data[46]
-                'KernelObject'                = [AuditPolicies.Events] $Data[48]
-                'SAM'                         = [AuditPolicies.Events] $Data[50]
-                'OtherObjectAccessEvents'     = [AuditPolicies.Events] $Data[52]
-                'CertificationServices'       = [AuditPolicies.Events] $Data[54]
-                'ApplicationGenerated'        = [AuditPolicies.Events] $Data[56]
-                'HandleManipulation'          = [AuditPolicies.Events] $Data[58]
-                'FileShare'                   = [AuditPolicies.Events] $Data[60]
-                'FilteringPlatformPacketDrop' = [AuditPolicies.Events] $Data[62]
-                'FilteringPlatformConnection' = [AuditPolicies.Events] $Data[64]
-                'DetailedFileShare'           = [AuditPolicies.Events] $Data[66]
-                'RemovableStorage'            = [AuditPolicies.Events] $Data[68]
-                'CentralAccessPolicyStaging'  = [AuditPolicies.Events] $Data[70]
-            }
-            PolicyChange      = [ordered] @{
-                'AuditPolicyChange'             = [AuditPolicies.Events] $Data[90]
-                'AuthenticationPolicyChange'    = [AuditPolicies.Events] $Data[92]
-                'AuthorizationPolicyChange'     = [AuditPolicies.Events] $Data[94]
-                'MPSSVCRuleLevelPolicyChange'   = [AuditPolicies.Events] $Data[96]
-                'FilteringPlatformPolicyChange' = [AuditPolicies.Events] $Data[98]
-                'OtherPolicyChangeEvents'       = [AuditPolicies.Events] $Data[100]
+                'File System'                    = [AuditPolicies.Events] $Data[44]
+                'Registry'                       = [AuditPolicies.Events] $Data[46]
+                'Kernel Object'                  = [AuditPolicies.Events] $Data[48]
+                'SAM'                            = [AuditPolicies.Events] $Data[50]
+                'Other Object Access Events'     = [AuditPolicies.Events] $Data[52]
+                'Certification Services'         = [AuditPolicies.Events] $Data[54]
+                'Application Generated'          = [AuditPolicies.Events] $Data[56]
+                'Handle Manipulation'            = [AuditPolicies.Events] $Data[58]
+                'File Share'                     = [AuditPolicies.Events] $Data[60]
+                'Filtering Platform Packet Drop' = [AuditPolicies.Events] $Data[62]
+                'Filtering Platform Connection'  = [AuditPolicies.Events] $Data[64]
+                'Detailed File Share'            = [AuditPolicies.Events] $Data[66]
+                'Removable Storage'              = [AuditPolicies.Events] $Data[68]
+                'Central Policy Staging'         = [AuditPolicies.Events] $Data[70]
             }
             PrivilegeUse      = [ordered] @{
-                'SensitivePrivilegeUse'    = [AuditPolicies.Events] $Data[72]
-                'NonSensitivePrivilegeUse' = [AuditPolicies.Events] $Data[74]
-                'OtherPrivilegeUseEvents'  = [AuditPolicies.Events] $Data[76]
+                'Sensitive Privilege Use'     = [AuditPolicies.Events] $Data[72]
+                'Non Sensitive Privilege Use' = [AuditPolicies.Events] $Data[74]
+                'Other Privilege Use Events'  = [AuditPolicies.Events] $Data[76]
             }
-            System            = [ordered] @{
-                'SecurityStateChange'     = [AuditPolicies.Events] $Data[12]
-                'SecuritySystemExtension' = [AuditPolicies.Events] $Data[14]
-                'SystemIntegrity'         = [AuditPolicies.Events] $Data[16]
-                'IPsecDriver'             = [AuditPolicies.Events] $Data[18]
-                'OtherSystemEvents'       = [AuditPolicies.Events] $Data[20]
+            DetailedTracking  = [ordered] @{
+                'Process Creation'            = [AuditPolicies.Events] $Data[78]
+                'Process Termination'         = [AuditPolicies.Events] $Data[80]
+                'DPAPI Activity'              = [AuditPolicies.Events] $Data[82]
+                'RPC Events'                  = [AuditPolicies.Events] $Data[84]
+                'Plug and Play Events'        = [AuditPolicies.Events] $Data[86]
+                'Token Right Adjusted Events' = [AuditPolicies.Events] $Data[88]
+            }
+            PolicyChange      = [ordered] @{
+                'Audit Policy Change'              = [AuditPolicies.Events] $Data[90]
+                'Authentication Policy Change'     = [AuditPolicies.Events] $Data[92]
+                'Authorization Policy Change'      = [AuditPolicies.Events] $Data[94]
+                'MPSSVC Rule-Level Policy Change'  = [AuditPolicies.Events] $Data[96]
+                'Filtering Platform Policy Change' = [AuditPolicies.Events] $Data[98]
+                'Other Policy Change Events'       = [AuditPolicies.Events] $Data[100]
+            }
+            AccountManagement = [ordered] @{
+                'User Account Management'         = [AuditPolicies.Events] $Data[102]
+                'Computer Account Management'     = [AuditPolicies.Events] $Data[104]
+                'Security Group Management'       = [AuditPolicies.Events] $Data[106]
+                'Distribution Group Management'    = [AuditPolicies.Events] $Data[108]
+                'Application Group Management'    = [AuditPolicies.Events] $Data[110]
+                'Other Account Management Events' = [AuditPolicies.Events] $Data[112]
+            }
+            DSAccess          = [ordered] @{
+                'Directory Service Access'               = [AuditPolicies.Events] $Data[114]
+                'Directory Service Changes'              = [AuditPolicies.Events] $Data[116]
+                'Directory Service Replication'          = [AuditPolicies.Events] $Data[118]
+                'Detailed Directory Service Replication' = [AuditPolicies.Events] $Data[120]
+            }
+            AccountLogon      = [ordered] @{
+                'Credential Validation'              = [AuditPolicies.Events] $Data[122]
+                'Kerberos Service Ticket Operations' = [AuditPolicies.Events] $Data[124]
+                'Other Account Logon Events'         = [AuditPolicies.Events] $Data[126]
+                'Kerberos Authentication Service'    = [AuditPolicies.Events] $Data[128]
             }
         }
-        $AuditPolicies
+        if (-not $Categories) {
+            $OutputObject = [ordered] @{}
+            foreach ($Entry in $AuditPolicies.Keys) {
+                foreach ($Key in $AuditPolicies[$Entry].Keys) {
+                    $OutputObject[$Key] = $AuditPolicies[$Entry][$Key]
+                }
+            }
+            $OutputObject
+        } else {
+            $AuditPolicies
+        }
     } else {
         Write-Warning -Message "Get-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
     }

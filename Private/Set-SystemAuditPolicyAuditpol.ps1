@@ -1,4 +1,23 @@
 ﻿function Set-SystemAuditPolicyAuditpol {
+    <#
+    .SYNOPSIS
+    This command is used to set the audit policy for the system using auditpol.exe
+
+    .DESCRIPTION
+    This command is used to set the audit policy for the system using auditpol.exe
+
+    .PARAMETER Policies
+    This parameter is used to specify the audit policy to be set.
+
+    .PARAMETER Value
+    This parameter is used to specify the value of the audit policy to be set. Options are: NotConfigured, Success, Failure, and SuccessAndFailure.
+
+    .EXAMPLE
+    An example
+
+    .NOTES
+    General notes
+    #>
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory)][ValidateSet(
@@ -71,7 +90,6 @@
             "Other Account Logon Events",
             "Kerberos Authentication Service",
             "Credential Validation"
-
         )][string[]] $Policies,
         [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value
     )
