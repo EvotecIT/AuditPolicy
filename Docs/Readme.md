@@ -32,9 +32,6 @@ Removes audit policy permissions from a user or group.
 ### [Set-SystemAuditPolicy](Set-SystemAuditPolicy.md)
 Sets the audit policy similary to what auditpol.exe does.
 
-### [Set-SystemAuditPolicyAuditpol](Set-SystemAuditPolicyAuditpol.md)
-{{ Fill in the Synopsis }}
-
 ### [Set-SystemAuditPolicyPermissions](Set-SystemAuditPolicyPermissions.md)
 This function will set the audit policy permissions for the specified user or group to FullControl.
 
