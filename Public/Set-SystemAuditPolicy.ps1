@@ -9,8 +9,8 @@
     .PARAMETER ComputerName
     ComputerName for remote system to clear audit policy from. Requires permissions on the destination.
 
-    .PARAMETER Policies
-    The policies to set from all categories
+    .PARAMETER Policy
+    The policy to set from all categories
 
     .PARAMETER AccountLogon
     Choose one of the options for the AccountLogon parameter.
@@ -140,7 +140,7 @@
             "Other Account Logon Events",
             "Kerberos Authentication Service",
             "Credential Validation"
-        )][string] $Policies,
+        )][alias('Policies')][string] $Policy,
 
         [parameter(Mandatory, ParameterSetName = 'AccountLogon')][ValidateSet(
             'Credential Validation',
@@ -345,11 +345,11 @@
         return
     }
 
-    if (-not $UseAuditPol) {
-        $BoundParameters = $PSBoundParameters
-        $CurrentParameterSet = $PsCmdlet.ParameterSetName
-        $ChosenParameter = $BoundParameters.$CurrentParameterSet
+    $BoundParameters = $PSBoundParameters
+    $CurrentParameterSet = $PsCmdlet.ParameterSetName
+    $ChosenParameter = $BoundParameters.$CurrentParameterSet
 
+    if (-not $UseAuditPol) {
         if ($CurrentParameterSet) {
             if ($CurrentParameterSet -eq 'AllPolicies') {
                 foreach ($Key in $AuditPoliciesByte.Keys) {
@@ -401,6 +401,10 @@
             }
         }
     } else {
-        Set-SystemAuditPolicyAuditpol -Policies $Policies -Value $Value -WhatIf:$WhatIfPreference
+        if ($Policy) {
+            Set-SystemAuditPolicyAuditpol -Policies $Policy -Value $Value -WhatIf:$WhatIfPreference
+        } elseif ($ChosenParameter) {
+            Set-SystemAuditPolicyAuditpol -Policies $ChosenParameter -Value $Value -WhatIf:$WhatIfPreference
+        }
     }
 }

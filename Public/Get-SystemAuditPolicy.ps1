@@ -9,6 +9,9 @@
     .PARAMETER ComputerName
     ComputerName for remote system to read audit policy from. Requires permissions on the destination.
 
+    .PARAMETER Policy
+    Returns the specified policy, and only that policy.
+
     .PARAMETER Categories
     Forces display in category view
 
@@ -25,6 +28,77 @@
     [CmdletBinding()]
     param(
         [string] $ComputerName,
+        [ValidateSet(
+            #System
+            "Security System Extension",
+            "System Integrity",
+            "IPsec Driver",
+            "Other System Events",
+            "Security State Change",
+            #Logon/Logoff#
+            "Logon",
+            "Logoff",
+            "Account Lockout",
+            "IPsec Main Mode",
+            "IPsec Quick Mode",
+            "IPsec Extended Mode",
+            "Special Logon",
+            "Other Logon/Logoff Events",
+            "Network Policy Server",
+            "User / Device Claims",
+            "Group Membership",
+            # Object Access#
+            "File System",
+            "Registry",
+            "Kernel Object",
+            "SAM",
+            "Certification Services",
+            "Application Generated",
+            "Handle Manipulation",
+            "File Share",
+            "Filtering Platform Packet Drop",
+            "Filtering Platform Connection",
+            "Other Object Access Events",
+            "Detailed File Share",
+            "Removable Storage",
+            "Central Policy Staging",
+            #Privilege Use#
+            "Non Sensitive Privilege Use",
+            "Other Privilege Use Events",
+            "Sensitive Privilege Use",
+            #Detailed Tracking#
+            "Process Creation",
+            "Process Termination",
+            "DPAPI Activity",
+            "RPC Events",
+            "Plug and Play Events",
+            "Token Right Adjusted Events",
+            #Policy Change#
+            "Audit Policy Change",
+            "Authentication Policy Change",
+            "Authorization Policy Change",
+            "MPSSVC Rule-Level Policy Change",
+            "Filtering Platform Policy Change",
+            "Other Policy Change Events",
+            #Account Management#
+            "Computer Account Management",
+            "Security Group Management",
+            "Distribution Group Management",
+            "Application Group Management",
+            "Other Account Management Events",
+            "User Account Management",
+            #DS Access#
+            "Directory Service Access",
+            "Directory Service Changes",
+            "Directory Service Replication",
+            "Detailed Directory Service Replication",
+            #Account Logon#
+            "Kerberos Service Ticket Operations",
+            "Kerberos Service Ticket Operations",
+            "Other Account Logon Events",
+            "Kerberos Authentication Service",
+            "Credential Validation"
+        )][alias('Policies')][string] $Policy,
         [switch] $Categories
     )
 
@@ -108,7 +182,7 @@
                 'User Account Management'         = [AuditPolicies.Events] $Data[102]
                 'Computer Account Management'     = [AuditPolicies.Events] $Data[104]
                 'Security Group Management'       = [AuditPolicies.Events] $Data[106]
-                'Distribution Group Management'    = [AuditPolicies.Events] $Data[108]
+                'Distribution Group Management'   = [AuditPolicies.Events] $Data[108]
                 'Application Group Management'    = [AuditPolicies.Events] $Data[110]
                 'Other Account Management Events' = [AuditPolicies.Events] $Data[112]
             }
@@ -125,16 +199,30 @@
                 'Kerberos Authentication Service'    = [AuditPolicies.Events] $Data[128]
             }
         }
-        if (-not $Categories) {
-            $OutputObject = [ordered] @{}
+        if ($Policy) {
             foreach ($Entry in $AuditPolicies.Keys) {
                 foreach ($Key in $AuditPolicies[$Entry].Keys) {
-                    $OutputObject[$Key] = $AuditPolicies[$Entry][$Key]
+                    if ($Policy -eq $Key) {
+                        return [PSCustomObject] @{
+                            'Category' = $Entry
+                            'Policy'   = $Policy
+                            'Value'    = $AuditPolicies[$Entry][$Key]
+                        }
+                    }
                 }
             }
-            $OutputObject
         } else {
-            $AuditPolicies
+            if (-not $Categories) {
+                $OutputObject = [ordered] @{}
+                foreach ($Entry in $AuditPolicies.Keys) {
+                    foreach ($Key in $AuditPolicies[$Entry].Keys) {
+                        $OutputObject[$Key] = $AuditPolicies[$Entry][$Key]
+                    }
+                }
+                $OutputObject
+            } else {
+                $AuditPolicies
+            }
         }
     } else {
         Write-Warning -Message "Get-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
