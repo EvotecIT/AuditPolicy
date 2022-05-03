@@ -14,6 +14,8 @@ $AuditPolicies.PrivilegeUse | Format-Table
 $AuditPolicies.System | Format-Table
 
 # In single level
-
 $AuditPolicies = Get-SystemAuditPolicy
 $AuditPolicies | Format-List
+
+# In single property
+$AuditPolicies = Get-SystemAuditPolicy -Policy 'Application Group Management'
