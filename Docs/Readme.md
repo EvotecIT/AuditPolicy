@@ -20,6 +20,9 @@ Clears all audit policies to their default values (Not Configured)
 ### [Get-SystemAuditPolicy](Get-SystemAuditPolicy.md)
 Small functions that reads Audit Policy (the same way as auditpol.exe) and returns a hashtable with the values.
 
+### [Get-SystemAuditPolicyFromFile](Get-SystemAuditPolicyFromFile.md)
+{{ Fill in the Synopsis }}
+
 ### [Remove-SystemAuditPolicyPermissions](Remove-SystemAuditPolicyPermissions.md)
 Removes audit policy permissions from a user or group.
 

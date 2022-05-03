@@ -13,7 +13,7 @@ Small functions that reads Audit Policy (the same way as auditpol.exe) and retur
 ## SYNTAX
 
 ```
-Get-SystemAuditPolicy [[-ComputerName] <String>] [<CommonParameters>]
+Get-SystemAuditPolicy [[-ComputerName] <String>] [-Categories] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,6 +45,21 @@ Aliases:
 Required: False
 Position: 1
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Categories
+Forces display in category view
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

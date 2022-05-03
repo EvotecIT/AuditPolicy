@@ -12,58 +12,64 @@ Sets the audit policy similary to what auditpol.exe does.
 
 ## SYNTAX
 
+### AllPolicies (Default)
+```
+Set-SystemAuditPolicy [-ComputerName <String>] -Policies <String> -Value <String> [-UseAuditPol] [-Suppress]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
 ### AccountLogon
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -AccountLogon <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -AccountLogon <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccountManagement
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -AccountManagement <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -AccountManagement <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DetailedTracking
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -DetailedTracking <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -DetailedTracking <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DSAccess
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -DSAccess <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -DSAccess <String> -Value <String> [-UseAuditPol] [-Suppress]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### LogonLogoff
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -LogonLogoff <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -LogonLogoff <String> -Value <String> [-UseAuditPol] [-Suppress]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### ObjectAccess
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -ObjectAccess <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -ObjectAccess <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PolicyChange
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -PolicyChange <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -PolicyChange <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PrivilegeUse
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -PrivilegeUse <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -PrivilegeUse <String> -Value <String> [-UseAuditPol]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### System
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -System <String> -Value <String> [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Set-SystemAuditPolicy [-ComputerName <String>] -System <String> -Value <String> [-UseAuditPol] [-Suppress]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -100,6 +106,21 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Policies
+The policies to set from all categories
+
+```yaml
+Type: String
+Parameter Sets: AllPolicies
+Aliases:
+
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -252,6 +273,36 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -UseAuditPol
+Forces use of AuditPol.exe instead of registry approach
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Suppress
+Suppresses the output of the command
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
