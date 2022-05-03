@@ -14,7 +14,7 @@ Sets the audit policy similary to what auditpol.exe does.
 
 ### AllPolicies (Default)
 ```
-Set-SystemAuditPolicy [-ComputerName <String>] -Policies <String> -Value <String> [-UseAuditPol] [-Suppress]
+Set-SystemAuditPolicy [-ComputerName <String>] -Policy <String> -Value <String> [-UseAuditPol] [-Suppress]
  [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -112,13 +112,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Policies
-The policies to set from all categories
+### -Policy
+System
+Logon/Logoff#
+ Object Access#
+Privilege Use#
+Detailed Tracking#
+Policy Change#
+Account Management#
+DS Access#
+Account Logon#
 
 ```yaml
 Type: String
 Parameter Sets: AllPolicies
-Aliases:
+Aliases: Policies
 
 Required: True
 Position: Named

@@ -1,6 +1,6 @@
 ---
-external help file: AuditPolicy-help.xml
-Module Name: AuditPolicy
+external help file:
+Module Name:
 online version:
 schema: 2.0.0
 ---
@@ -13,7 +13,7 @@ Small functions that reads Audit Policy (the same way as auditpol.exe) and retur
 ## SYNTAX
 
 ```
-Get-SystemAuditPolicy [[-ComputerName] <String>] [-Categories] [<CommonParameters>]
+Get-SystemAuditPolicy [[-ComputerName] <String>] [[-Policy] <String>] [-Categories] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,6 +44,21 @@ Aliases:
 
 Required: False
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Policy
+Returns the specified policy, and only that policy.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Policies
+
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
