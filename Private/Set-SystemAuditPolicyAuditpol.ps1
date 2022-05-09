@@ -93,79 +93,6 @@
         )][string[]] $Policies,
         [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value
     )
-    <#
-    $AllPolicies = @(
-        #System
-        "Security System Extension"               #No Auditing
-        "System Integrity"                    #No Auditing
-        "IPsec Driver"                           #No Auditing
-        "Other System Events"                     #No Auditing
-        "Security State Change"                   #No Auditing
-        #Logon/Logoff#
-        "Logon"                                   #No Auditing
-        "Logoff"                                  #No Auditing
-        "Account Lockout"                         #No Auditing
-        "IPsec Main Mode"                         #No Auditing
-        "IPsec Quick Mode"                        #No Auditing
-        "IPsec Extended Mode"                     #No Auditing
-        "Special Logon"                           #No Auditing
-        "Other Logon/Logoff Events"               #No Auditing
-        "Network Policy Server"                   #No Auditing
-        "User / Device Claims"                    #No Auditing
-        "Group Membership"                        #No Auditing
-        # Object Access#
-        "File System"                             #No Auditing
-        "Registry"                                #No Auditing
-        "Kernel Object"                          #No Auditing
-        "SAM"                                     #No Auditing
-        "Certification Services"                  #No Auditing
-        "Application Generated"                   #No Auditing
-        "Handle Manipulation"                     #No Auditing
-        "File Share"                              #No Auditing
-        "Filtering Platform Packet Drop"          #No Auditing
-        "Filtering Platform Connection"           #No Auditing
-        "Other Object Access Events"              #No Auditing
-        "Detailed File Share"                     #No Auditing
-        "Removable Storage"                       #No Auditing
-        "Central Policy Staging"                  #No Auditing
-        #Privilege Use#
-        "Non Sensitive Privilege Use"             #No Auditing
-        "Other Privilege Use Events"              #No Auditing
-        "Sensitive Privilege Use"                 #No Auditing
-        #Detailed Tracking#
-        "Process Creation"                        #No Auditing
-        "Process Termination"                     #Success and Failure
-        "DPAPI Activity"                          #No Auditing
-        "RPC Events"                              #No Auditing
-        "Plug and Play Events"                    #No Auditing
-        "Token Right Adjusted Events"             #Success and Failure
-        #Policy Change#
-        "Audit Policy Change"                     #No Auditing
-        "Authentication Policy Change"            #No Auditing
-        "Authorization Policy Change"             #No Auditing
-        "MPSSVC Rule-Level Policy Change"         #No Auditing
-        "Filtering Platform Policy Change"        #No Auditing
-        "Other Policy Change Events"              #No Auditing
-        #Account Management#
-        "Computer Account Management"             #No Auditing
-        "Security Group Management"               #No Auditing
-        "Distribution Group Management"           #No Auditing
-        "Application Group Management"           #No Auditing
-        "Other Account Management Events"         #No Auditing
-        "User Account Management"                 #No Auditing
-        #DS Access#
-        "Directory Service Access"                #No Auditing
-        "Directory Service Changes"               #No Auditing
-        "Directory Service Replication"           #No Auditing
-        "Detailed Directory Service Replication"  #No Auditing
-        #Account Logon#
-        "Kerberos Service Ticket Operations"      #No Auditing
-        "Kerberos Service Ticket Operations"      #No Auditing
-        "Other Account Logon Events"              #No Auditing
-        "Kerberos Authentication Service"         #No Auditing
-        "Credential Validation"                   #Success and Failure
-    )
-    #>
     if ($Value -eq 'NotConfigured') {
         $Success = 'disable'
         $Failure = 'disable'
@@ -182,8 +109,37 @@
 
     foreach ($Policy in $Policies) {
         if ($PSCmdlet.ShouldProcess("SubCategory $Policy", "Setting $Value (Success: $Success / Failure: $Failure)")) {
-            #Write-Verbose -Message "Set-SystemAuditPolicyAuditpol - Executing: auditpol.exe /set /subcategory:$Policy /success:$Success /failure:$Failure"
-            auditpol.exe /set /subcategory:$Policy /success:$Success /failure:$Failure
+            Write-Verbose -Message "Set-SystemAuditPolicyAuditpol - Executing: auditpol.exe /set /subcategory:$Policy /success:$Success /failure:$Failure"
+            #$Output = auditpol.exe /set /subcategory:$Policy /success:$Success /failure:$Failure
+            $pinfo = [System.Diagnostics.ProcessStartInfo]::new()
+            $pinfo.FileName = "auditpol.exe"
+            $pinfo.RedirectStandardError = $true
+            $pinfo.RedirectStandardOutput = $true
+            $pinfo.UseShellExecute = $false
+            $pinfo.Arguments = " /set /subcategory:`"$Policy`" /success:`"$Success`" /failure:`"$Failure`""
+            $p = [System.Diagnostics.Process]::new()
+            $p.StartInfo = $pinfo
+            $p.Start() | Out-Null
+            $p.WaitForExit()
+            $Output = $p.StandardOutput.ReadToEnd()
+            $Errors = $p.StandardError.ReadToEnd()
+
+            if ($Output -like "*The command was successfully*" -and -not $Errors) {
+                [PSCustomObject] @{
+                    'Policy' = $Policy
+                    'Value'  = $Value
+                    'Result' = 'Success'
+                    'Error'  = ''
+                }
+            } else {
+                $SplitErrors = ($Errors -split "\n").Trim() -join " "
+                [PSCustomObject] @{
+                    'Policy' = $Policy
+                    'Value'  = $Value
+                    'Result' = 'Failed'
+                    'Error'  = $SplitErrors
+                }
+            }
         }
     }
 }

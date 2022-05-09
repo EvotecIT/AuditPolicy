@@ -48,6 +48,9 @@
     .PARAMETER Suppress
     Suppresses the output of the command
 
+    .PARAMETER Force
+    Forces the command to temporary elevate permissions for BUILTIN\Administrators and then revert back to the original permissions
+
     .EXAMPLE
     $WhatIf = $false
 
@@ -230,7 +233,8 @@
 
         [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value,
         [switch] $UseAuditPol,
-        [switch] $Suppress
+        [switch] $Suppress,
+        [switch] $Force
     )
 
     Add-Type -TypeDefinition @"
@@ -333,23 +337,29 @@
         }
     }
 
-    $Audit = Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName
-    if ($Audit.PSConnection -eq $true -and $Audit.PSError -eq $false) {
 
-    } else {
-        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-            throw $($Audit.PSErrorMessage)
-        } else {
-            Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
-        }
-        return
-    }
 
     $BoundParameters = $PSBoundParameters
     $CurrentParameterSet = $PsCmdlet.ParameterSetName
     $ChosenParameter = $BoundParameters.$CurrentParameterSet
 
     if (-not $UseAuditPol) {
+        if ($Force) {
+            $SID = ConvertFrom-SID -SID "S-1-5-32-544"
+            Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
+        }
+
+        $Audit = Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName
+        if ($Audit.PSConnection -eq $true -and $Audit.PSError -eq $false) {
+
+        } else {
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                throw $($Audit.PSErrorMessage)
+            } else {
+                Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
+            }
+            return
+        }
         if ($CurrentParameterSet) {
             if ($CurrentParameterSet -eq 'AllPolicies') {
                 foreach ($Key in $AuditPoliciesByte.Keys) {
@@ -376,28 +386,39 @@
                 # and then we modify single byte
                 $ValueToSet[$ByteNumber] = $ExpectedValue
                 # and set it back to registry
-                $AuditOutput = Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName -Type None -Value $ValueToSet -WhatIf:$WhatIfPreference
-                if ($AuditOutput.PSConnection -eq $true -and $AuditOutput.PSError -eq $false) {
-                    $Result = 'Success'
-                } else {
-                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                        throw $($AuditOutput.PSErrorMessage)
+                if ($PSCmdlet.ShouldProcess("SubCategory $Policy", "Setting $Value on $Policy")) {
+                    $AuditOutput = Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName -Type None -Value $ValueToSet -WhatIf:$WhatIfPreference
+                    if ($AuditOutput.PSConnection -eq $true -and $AuditOutput.PSError -eq $false) {
+                        $Result = 'Success'
+                        $Message = ''
                     } else {
-                        Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be set because: $($AuditOutput.PSErrorMessage)"
+                        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                            throw $($AuditOutput.PSErrorMessage)
+                        } else {
+                            Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be set because: $($AuditOutput.PSErrorMessage)"
+                        }
+                        $Result = 'Failed'
+                        $Message = $($AuditOutput.PSErrorMessage)
                     }
+                } else {
                     $Result = 'Failed'
+                    $Message = 'WhatIf in use.'
                 }
             } else {
                 $Result = 'Not required'
                 Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
             }
         }
+        if ($Force) {
+            $SID = ConvertFrom-SID -SID "S-1-5-32-544"
+            Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
+        }
         if (-not $Suppress) {
             [PSCustomObject] @{
                 'Policy' = $ChosenParameter
                 'Value'  = $ExpectedTranslatedValue
                 'Result' = $Result
-                'Error'  = $($AuditOutput.PSErrorMessage)
+                'Error'  = $Message
             }
         }
     } else {
