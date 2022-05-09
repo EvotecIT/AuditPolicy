@@ -12,7 +12,7 @@ Locale: en-US
 
 ## AuditPolicy Cmdlets
 ### [Backup-SystemAuditPolicy](Backup-SystemAuditPolicy.md)
-{{ Fill in the Synopsis }}
+Backups the current system audit policy to a file or json or as object
 
 ### [Clear-SystemAuditPolicy](Clear-SystemAuditPolicy.md)
 Clears all audit policies to their default values (Not Configured)
@@ -27,7 +27,7 @@ Small functions that reads Audit Policy (the same way as auditpol.exe) and retur
 Removes audit policy permissions from a user or group.
 
 ### [Restore-SystemAuditPolicy](Restore-SystemAuditPolicy.md)
-{{ Fill in the Synopsis }}
+Restore the system audit policy to the one from backup.
 
 ### [Set-SystemAuditPolicy](Set-SystemAuditPolicy.md)
 Sets the audit policy similary to what auditpol.exe does.
