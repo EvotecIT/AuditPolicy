@@ -26,7 +26,7 @@ This command can be used to add audit policy permissions for the specified user 
 
 ### EXAMPLE 1
 ```
-An example
+Set-SystemAuditPolicyPermissions -Identity "przemyslaw.klys" -Verbose -WhatIf
 ```
 
 ## PARAMETERS

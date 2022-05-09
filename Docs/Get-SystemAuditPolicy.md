@@ -1,6 +1,6 @@
 ---
-external help file:
-Module Name:
+external help file: AuditPolicy-help.xml
+Module Name: AuditPolicy
 online version:
 schema: 2.0.0
 ---
@@ -24,12 +24,11 @@ Small functions that reads Audit Policy (the same way as auditpol.exe) and retur
 ### EXAMPLE 1
 ```
 $AuditPolicies = Get-SystemAuditPolicy
-```
-
 $AuditPolicies | Format-Table
 $AuditPolicies.AccountLogon | Format-Table
 $AuditPolicies.AccountManagement | Format-Table
 $AuditPolicies.DetailedTracking | Format-Table
+```
 
 ## PARAMETERS
 

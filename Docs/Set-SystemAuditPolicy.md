@@ -15,61 +15,61 @@ Sets the audit policy similary to what auditpol.exe does.
 ### AllPolicies (Default)
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -Policy <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccountLogon
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -AccountLogon <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccountManagement
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -AccountManagement <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DetailedTracking
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -DetailedTracking <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DSAccess
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -DSAccess <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### LogonLogoff
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -LogonLogoff <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### ObjectAccess
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -ObjectAccess <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PolicyChange
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -PolicyChange <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PrivilegeUse
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -PrivilegeUse <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### System
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -System <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -82,17 +82,17 @@ Sets the audit policy similary to what auditpol.exe does.
 $WhatIf = $false
 ```
 
-Set-SystemAuditPolicy -AccountLogon KerberosServiceTicketOperations -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountLogon OtherAccountLogonEvents -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountLogon KerberosAuthenticationService -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountLogon CredentialValidation -Value Success -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon 'Kerberos Service Ticket Operations' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon 'Other AccountLogon Events' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon 'Kerberos Authentication Service' -Value SuccessAndFailure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountLogon 'Credential Validation' -Value Success -Verbose -WhatIf:$WhatIf
 
-Set-SystemAuditPolicy -AccountManagement ComputerAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountManagement ApplicationGroupManagement -Value Success -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountManagement DistributionGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountManagement OtherAccountManagementEvents -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountManagement SecurityGroupManagement -Value Failure -Verbose -WhatIf:$WhatIf
-Set-SystemAuditPolicy -AccountManagement UserAccountManagement -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'Computer Account Management' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'Application Group Management' -Value Success -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'Distribution Group Management' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'Other Account ManagementEvents' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'Security Group Management' -Value Failure -Verbose -WhatIf:$WhatIf
+Set-SystemAuditPolicy -AccountManagement 'User Account Management' -Value Failure -Verbose -WhatIf:$WhatIf
 
 ## PARAMETERS
 
@@ -113,15 +113,7 @@ Accept wildcard characters: False
 ```
 
 ### -Policy
-System
-Logon/Logoff#
- Object Access#
-Privilege Use#
-Detailed Tracking#
-Policy Change#
-Account Management#
-DS Access#
-Account Logon#
+The policy to set from all categories
 
 ```yaml
 Type: String
@@ -302,6 +294,21 @@ Accept wildcard characters: False
 
 ### -Suppress
 Suppresses the output of the command
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Force
+{{ Fill Force Description }}
 
 ```yaml
 Type: SwitchParameter
