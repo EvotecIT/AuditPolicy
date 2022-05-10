@@ -344,7 +344,8 @@
     $ChosenParameter = $BoundParameters.$CurrentParameterSet
 
     if (-not $UseAuditPol) {
-        if ($Force) {
+        $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
+        if ($Force -and -not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
             Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
         }
@@ -409,7 +410,7 @@
                 Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
             }
         }
-        if ($Force) {
+        if ($Force -and -not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
             Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
         }
