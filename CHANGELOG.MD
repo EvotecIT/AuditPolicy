@@ -1,4 +1,4 @@
-﻿#### 0.0.2
+﻿#### 0.0.2 - 2022.05.11
 - Rewritten cmdlets to be more flexible
 - Using policy names the same as in auditpol
 - Added a few more cmdlets
