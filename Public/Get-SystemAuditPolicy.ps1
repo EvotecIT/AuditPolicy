@@ -119,14 +119,14 @@
     $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
     if (-not $IsSystem) {
         $SID = ConvertFrom-SID -SID "S-1-5-32-544"
-        Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
+        Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false
     }
 
     $Audit = Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName
 
     if (-not $IsSystem) {
         $SID = ConvertFrom-SID -SID "S-1-5-32-544"
-        Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
+        Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false
     }
 
     if ($Audit.PSConnection -eq $true -and $Audit.PSError -eq $false) {

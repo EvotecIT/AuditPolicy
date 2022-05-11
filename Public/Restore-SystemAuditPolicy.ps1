@@ -35,7 +35,7 @@
     [cmdletBinding(SupportsShouldProcess, DefaultParameterSetName = "File")]
     param(
         [string] $ComputerName,
-        [parameter(Mandatory, ParameterSetName = 'Object')][string] $Object,
+        [parameter(Mandatory, ParameterSetName = 'Object')][System.Collections.IDictionary] $Object,
         [parameter(Mandatory, ParameterSetName = 'JSON')][string] $JSON,
         [parameter(Mandatory, ParameterSetName = 'File')][string] $FilePath,
 
@@ -151,7 +151,7 @@
                     }
 
                     $Value = $SystemPolicies[$CurrentPolicy]
-                    if ($Value -ne 'NotConfigured') {
+                    if ($Value -ne $AuditPolicy[$CurrentPolicy]) {
                         $setSystemAuditPolicySplat = @{
                             Policy       = $CurrentPolicy
                             ComputerName = $ComputerName
