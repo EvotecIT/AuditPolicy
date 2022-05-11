@@ -20,8 +20,8 @@ Restore-SystemAuditPolicy [-ComputerName <String>] -FilePath <String> [-Policy <
 
 ### Object
 ```
-Restore-SystemAuditPolicy [-ComputerName <String>] -Object <String> [-Policy <String[]>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Restore-SystemAuditPolicy [-ComputerName <String>] -Object <IDictionary> [-Policy <String[]>] [-WhatIf]
+ [-Confirm] [<CommonParameters>]
 ```
 
 ### JSON
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 Object to restore audit policy from
 
 ```yaml
-Type: String
+Type: IDictionary
 Parameter Sets: Object
 Aliases:
 

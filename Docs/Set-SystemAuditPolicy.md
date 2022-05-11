@@ -15,61 +15,61 @@ Sets the audit policy similary to what auditpol.exe does.
 ### AllPolicies (Default)
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -Policy <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccountLogon
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -AccountLogon <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccountManagement
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -AccountManagement <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DetailedTracking
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -DetailedTracking <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### DSAccess
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -DSAccess <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### LogonLogoff
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -LogonLogoff <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### ObjectAccess
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -ObjectAccess <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PolicyChange
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -PolicyChange <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### PrivilegeUse
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -PrivilegeUse <String> -Value <String> [-UseAuditPol]
- [-Suppress] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-Suppress] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### System
 ```
 Set-SystemAuditPolicy [-ComputerName <String>] -System <String> -Value <String> [-UseAuditPol] [-Suppress]
- [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -294,21 +294,6 @@ Accept wildcard characters: False
 
 ### -Suppress
 Suppresses the output of the command
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Force
-{{ Fill Force Description }}
 
 ```yaml
 Type: SwitchParameter
