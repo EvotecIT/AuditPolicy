@@ -48,9 +48,6 @@
     .PARAMETER Suppress
     Suppresses the output of the command
 
-    .PARAMETER Force
-    Forces the command to temporary elevate permissions for BUILTIN\Administrators and then revert back to the original permissions
-
     .EXAMPLE
     $WhatIf = $false
 
@@ -233,8 +230,7 @@
 
         [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value,
         [switch] $UseAuditPol,
-        [switch] $Suppress,
-        [switch] $Force
+        [switch] $Suppress
     )
 
     Add-Type -TypeDefinition @"
@@ -345,7 +341,7 @@
 
     if (-not $UseAuditPol) {
         $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
-        if ($Force -and -not $IsSystem) {
+        if (-not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
             Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
         }
@@ -410,7 +406,7 @@
                 Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
             }
         }
-        if ($Force -and -not $IsSystem) {
+        if (-not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
             Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
         }

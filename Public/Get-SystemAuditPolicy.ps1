@@ -15,9 +15,6 @@
     .PARAMETER Categories
     Forces display in category view
 
-    .PARAMETER Force
-    Forces the command to temporary elevate permissions for BUILTIN\Administrators and then revert back to the original permissions
-
     .EXAMPLE
     $AuditPolicies = Get-SystemAuditPolicy
     $AuditPolicies | Format-Table
@@ -102,8 +99,7 @@
             "Kerberos Authentication Service",
             "Credential Validation"
         )][alias('Policies')][string] $Policy,
-        [switch] $Categories,
-        [switch] $Force
+        [switch] $Categories
     )
 
     Add-Type -TypeDefinition @"
@@ -121,14 +117,14 @@
 "@
 
     $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
-    if ($Force -and -not $IsSystem) {
+    if (-not $IsSystem) {
         $SID = ConvertFrom-SID -SID "S-1-5-32-544"
         Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
     }
 
     $Audit = Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName
 
-    if ($Force -and -not $IsSystem) {
+    if (-not $IsSystem) {
         $SID = ConvertFrom-SID -SID "S-1-5-32-544"
         Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl
     }

@@ -22,7 +22,12 @@
     Pick policy/policies to restore from all policies provided
 
     .EXAMPLE
-    An example
+    $FilePath = "$PSScriptRoot\Backups\AuditPolicy.json"
+    Restore-SystemAuditPolicy -FilePath $FilePath -Verbose -WhatIf
+
+    .EXAMPLE
+    $FilePath = "$PSScriptRoot\Backups\AuditPolicy.json"
+    Restore-SystemAuditPolicy -FilePath $FilePath -Verbose -Policy 'Application Group Management'
 
     .NOTES
     General notes
@@ -184,15 +189,6 @@
                         }
                         $Success = Set-SystemAuditPolicy @setSystemAuditPolicySplat
                         $Success
-                        # if ($Success.PSError -eq $false -and $Success.PSConnection -eq $true) {
-
-                        # } else {
-                        #     if ($Success.PSErrorMessage -eq "WhatIf used - skipping registry setting") {
-
-                        #     } else {
-                        #         Write-Warning -Message "Restore-SystemAuditPolicies - Failed to set $Policy. Error: $($Success.PSErrorMessage)"
-                        #     }
-                        # }
                     } else {
                         [PSCustomObject] @{
                             'Policy' = $CurrentPolicy
@@ -202,31 +198,6 @@
                         }
                         Write-Verbose -Message "Restore-SystemAuditPolicies - Current value for $CurrentPolicy is $($AuditPolicy[$CurrentPolicy]) is the same as requested $Value"
                     }
-
-                    # foreach ($Sub in $SubPolicies.PSObject.Properties.Name) {
-                    #     $Value = $SystemPolicies.$Policy.$Sub
-                    #     if ($Value -ne $AuditPolicy[$Policy][$Sub]) {
-                    #         Write-Verbose -Message "Restore-SystemAuditPolicies - Current value for $Policy \ $Sub is $($AuditPolicy[$Policy][$Sub]) to be replaced with $Value"
-                    #         $setSystemAuditPolicySplat = @{
-                    #             "$Policy"    = $Sub
-                    #             ComputerName = $ComputerName
-                    #             WhatIf       = $WhatIfPreference
-                    #             Value        = $Value
-                    #         }
-                    #         $Success = Set-SystemAuditPolicy @setSystemAuditPolicySplat
-                    #         if ($Success.PSError -eq $false -and $Success.PSConnection -eq $true) {
-
-                    #         } else {
-                    #             if ($Success.PSErrorMessage -eq "WhatIf used - skipping registry setting") {
-
-                    #             } else {
-                    #                 Write-Warning -Message "Restore-SystemAuditPolicies - Failed to set $Policy \ $Sub. Error: $($Success.PSErrorMessage)"
-                    #             }
-                    #         }
-                    #     } else {
-                    #         #Write-Verbose -Message "Restore-SystemAuditPolicies - Current value for $Policy \ $Sub is $($AuditPolicy[$Policy][$Sub]) is the same as requested $Value"
-                    #     }
-                    # }
                 }
 
             }
