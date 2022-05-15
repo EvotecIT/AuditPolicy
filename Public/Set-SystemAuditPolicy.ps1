@@ -45,6 +45,10 @@
     .PARAMETER UseAuditPol
     Forces use of AuditPol.exe instead of registry approach
 
+    .PARAMETER UseLocalSecurityPolicy
+    Forces use of LocalSecurityPolicy (audit.csv) to instead of registry approach
+    It's important to know that refresh of policies happens on next GPO refresh rather than being applied immediately.
+
     .PARAMETER Suppress
     Suppresses the output of the command
 
@@ -62,6 +66,12 @@
     Set-SystemAuditPolicy -AccountManagement 'Other Account ManagementEvents' -Value Failure -Verbose -WhatIf:$WhatIf
     Set-SystemAuditPolicy -AccountManagement 'Security Group Management' -Value Failure -Verbose -WhatIf:$WhatIf
     Set-SystemAuditPolicy -AccountManagement 'User Account Management' -Value Failure -Verbose -WhatIf:$WhatIf
+
+    .EXAMPLE
+    Set-SystemAuditPolicy -AccountManagement 'User Account Management' -Value Failure -Verbose -WhatIf -UseLocalSecurityPolicy
+
+    .EXAMPLE
+    Set-SystemAuditPolicy -AccountManagement 'User Account Management' -Value Failure -Verbose -WhatIf -UseAuditPol
 
     .NOTES
     General notes
@@ -228,8 +238,9 @@
             'Other System Events'
         )][string] $System,
 
-        [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value,
+        [parameter(Mandatory)][validateSet('NoAuditing', 'NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value,
         [switch] $UseAuditPol,
+        [switch] $UseLocalSecurityPolicy,
         [switch] $Suppress
     )
 
@@ -239,6 +250,7 @@
         namespace AuditPolicies
         {
             public enum Events {
+                NoAuditing    = 0,
                 NotConfigured    = 0,
                 Success          = 1,
                 Failure          = 2,
@@ -248,6 +260,7 @@
 "@
 
     $AuditValues = @{
+        'NoAuditing'        = 0
         'NotConfigured'     = 0
         'Success'           = 1
         'Failure'           = 2
@@ -339,7 +352,19 @@
     $CurrentParameterSet = $PsCmdlet.ParameterSetName
     $ChosenParameter = $BoundParameters.$CurrentParameterSet
 
-    if (-not $UseAuditPol) {
+    if ($UseAuditPol) {
+        if ($Policy) {
+            Set-SystemAuditPolicyAuditpol -Policies $Policy -Value $Value -WhatIf:$WhatIfPreference
+        } elseif ($ChosenParameter) {
+            Set-SystemAuditPolicyAuditpol -Policies $ChosenParameter -Value $Value -WhatIf:$WhatIfPreference
+        }
+    } elseif ($UseLocalSecurityPolicy) {
+        if ($Policy) {
+            Set-SystemAuditPolicyLocalSecurity -Policies $Policy -Value $Value -WhatIf:$WhatIfPreference
+        } elseif ($ChosenParameter) {
+            Set-SystemAuditPolicyLocalSecurity -Policies $ChosenParameter -Value $Value -WhatIf:$WhatIfPreference
+        }
+    } else {
         $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
         if (-not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
@@ -353,7 +378,7 @@
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                 throw $($Audit.PSErrorMessage)
             } else {
-                Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
+                Write-Warning -Message "Set-SystemAuditPolicy - Audit policies couldn't be read: $($Audit.PSErrorMessage)"
             }
             return
         }
@@ -376,7 +401,7 @@
             $CurrentTranslatedValue = [AuditPolicies.Events] $CurrentValue
             $ExpectedTranslatedValue = [AuditPolicies.Events] $ExpectedValue
 
-            Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter is $CurrentTranslatedValue ($CurrentValue) to be replaced with $ExpectedTranslatedValue ($ExpectedValue)"
+            Write-Verbose -Message "Set-SystemAuditPolicy - Current value for $CurrentParameterSet\$ChosenParameter is $CurrentTranslatedValue ($CurrentValue) to be replaced with $ExpectedTranslatedValue ($ExpectedValue)"
             if ($CurrentTranslatedValue -ne $ExpectedTranslatedValue) {
                 # we get value from registry as is
                 $ValueToSet = $Audit.PSValue
@@ -392,7 +417,7 @@
                         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                             throw $($AuditOutput.PSErrorMessage)
                         } else {
-                            Write-Warning -Message "Set-SystemAuditPolicies - Audit policies couldn't be set because: $($AuditOutput.PSErrorMessage)"
+                            Write-Warning -Message "Set-SystemAuditPolicy - Audit policies couldn't be set because: $($AuditOutput.PSErrorMessage)"
                         }
                         $Result = 'Failed'
                         $Message = $($AuditOutput.PSErrorMessage)
@@ -403,7 +428,7 @@
                 }
             } else {
                 $Result = 'Not required'
-                Write-Verbose -Message "Set-SystemAuditPolicies - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
+                Write-Verbose -Message "Set-SystemAuditPolicy - Current value for $CurrentParameterSet\$ChosenParameter ($ByteNumber) is $CurrentTranslatedValue ($CurrentValue) - nothing to do."
             }
         }
         if (-not $IsSystem) {
@@ -417,12 +442,6 @@
                 'Result' = $Result
                 'Error'  = $Message
             }
-        }
-    } else {
-        if ($Policy) {
-            Set-SystemAuditPolicyAuditpol -Policies $Policy -Value $Value -WhatIf:$WhatIfPreference
-        } elseif ($ChosenParameter) {
-            Set-SystemAuditPolicyAuditpol -Policies $ChosenParameter -Value $Value -WhatIf:$WhatIfPreference
         }
     }
 }
