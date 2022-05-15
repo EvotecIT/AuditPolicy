@@ -12,8 +12,14 @@
     .PARAMETER Value
     This parameter is used to specify the value of the audit policy to be set. Options are: NotConfigured, Success, Failure, and SuccessAndFailure.
 
+    .PARAMETER Suppress
+    Suppresses the output of the command
+
     .EXAMPLE
-    An example
+    Set-SystemAuditPolicyLocalSecurity -AccountManagement 'Computer Account Management' -Value Failure -Verbose -WhatIf
+
+    .EXAMPLE
+    Set-SystemAuditPolicyLocalSecurity -AccountManagement 'Application Group Management' -Value Success -Verbose -WhatIf
 
     .NOTES
     General notes
@@ -91,9 +97,9 @@
             "Kerberos Authentication Service",
             "Credential Validation"
         )][string[]] $Policies,
-        [parameter(Mandatory)][validateSet('NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value
+        [parameter(Mandatory)][validateSet('NoAuditing', 'NotConfigured', 'Success', 'Failure', 'SuccessAndFailure')][string] $Value
     )
-    if ($Value -eq 'NotConfigured') {
+    if ($Value -in 'NotConfigured', 'NoAuditing') {
         $Success = 'disable'
         $Failure = 'disable'
     } elseif ($Value -eq 'Success') {
@@ -125,19 +131,32 @@
             $Errors = $p.StandardError.ReadToEnd()
 
             if ($Output -like "*The command was successfully*" -and -not $Errors) {
-                [PSCustomObject] @{
-                    'Policy' = $Policy
-                    'Value'  = $Value
-                    'Result' = 'Success'
-                    'Error'  = ''
+                if (-not $Suppress) {
+                    [PSCustomObject] @{
+                        'Policy' = $Policy
+                        'Value'  = $Value
+                        'Result' = 'Success'
+                        'Error'  = ''
+                    }
                 }
             } else {
-                $SplitErrors = ($Errors -split "\n").Trim() -join " "
+                if (-not $Suppress) {
+                    $SplitErrors = ($Errors -split "\n").Trim() -join " "
+                    [PSCustomObject] @{
+                        'Policy' = $Policy
+                        'Value'  = $Value
+                        'Result' = 'Failed'
+                        'Error'  = $SplitErrors
+                    }
+                }
+            }
+        } else {
+            if (-not $Suppress) {
                 [PSCustomObject] @{
                     'Policy' = $Policy
                     'Value'  = $Value
-                    'Result' = 'Failed'
-                    'Error'  = $SplitErrors
+                    'Result' = 'WhatIf'
+                    'Error'  = 'WhatIf in use.'
                 }
             }
         }
