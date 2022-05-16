@@ -148,17 +148,6 @@ $FilePath = "$PSScriptRoot\Backups\AuditPolicy.json"
 Restore-SystemAuditPolicy -FilePath $FilePath -Verbose -WhatIf
 Restore-SystemAuditPolicy -FilePath $FilePath -Verbose -Policy 'Application Group Management' -WhatIf
 ```
-
-Or
-
-### Related Links
-
-- https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/auditpol-local-security-policy-results-differ
-- https://web.archive.org/web/20150613060638/http://blogs.msdn.com/b/spatdsg/archive/2011/06/06/audit-policy-not-registering-audits.aspx
-- https://rakhesh.com/windows/gpo-audit-policies-not-applying/\
-- https://github.com/rkovar/PowerShell/blob/master/audit.bat
-
-
 #### Audit Policies Subcategories
 
 Subcategories used within Audit.csv file to manage
