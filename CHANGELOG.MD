@@ -1,4 +1,7 @@
-﻿#### 0.0.3 - 2022.05.15
+﻿#### 0.0.4 - 2022.05.19
+- Small fix for enum values
+
+#### 0.0.3 - 2022.05.15
 - Added `UseLocalSecurityPolicy` to `Set-SystemAuditPolicy` parameter allowing setting via local policy rather than directly
 - Small adjustments to help
 - Small fixes to suppress and output when using `Set-SystemAuditPolicy`
