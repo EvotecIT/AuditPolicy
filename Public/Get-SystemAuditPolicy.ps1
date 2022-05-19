@@ -108,9 +108,9 @@
         namespace AuditPolicies
         {
             public enum Events {
-                NotConfigured    = 0,
-                Success          = 1,
-                Failure          = 2,
+                NotConfigured     = 0,
+                Success           = 1,
+                Failure           = 2,
                 SuccessAndFailure = 3
             }
         }
