@@ -8,7 +8,7 @@
     Description          = 'Module that replaces auditpol.exe with a custom version that can be used to audit or make changes to the Windows Security Policy.'
     FunctionsToExport    = @('Backup-SystemAuditPolicy', 'Clear-SystemAuditPolicy', 'Get-SystemAuditPolicy', 'Get-SystemAuditPolicyFromFile', 'Remove-SystemAuditPolicyPermissions', 'Restore-SystemAuditPolicy', 'Set-SystemAuditPolicy', 'Set-SystemAuditPolicyPermissions')
     GUID                 = '14651643-e1f8-4123-9250-9ed210b86963'
-    ModuleVersion        = '0.0.3'
+    ModuleVersion        = '0.0.4'
     PowerShellVersion    = '5.1'
     PrivateData          = @{
         PSData = @{
