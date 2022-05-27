@@ -1,4 +1,7 @@
-﻿#### 0.0.4 - 2022.05.19
+﻿#### 0.0.5 - 2022.05.27
+- Small fix for LocalSecurityPolicy if folder doesn't exists
+
+#### 0.0.4 - 2022.05.19
 - Small fix for enum values
 
 #### 0.0.3 - 2022.05.15
