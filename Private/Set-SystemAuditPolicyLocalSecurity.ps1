@@ -181,6 +181,7 @@
 
     $LocalSecurity = [ordered] @{}
 
+    $LocalSecurityPolicyFolder = [io.path]::Combine($Env:SystemRoot, "System32", "GroupPolicy", "Machine", "Microsoft", "Windows NT", "Audit")
     $LocalSecurityPolicy = [io.path]::Combine($Env:SystemRoot, "System32", "GroupPolicy", "Machine", "Microsoft", "Windows NT", "Audit", 'Audit.csv')
     if (Test-Path -LiteralPath $LocalSecurityPolicy) {
         $CurrentCSV = Get-Content -LiteralPath $LocalSecurityPolicy -Raw | ConvertFrom-Csv
@@ -205,6 +206,17 @@
         $LocalSecurity[$Policy] = $InputValue
     }
     if ($PSCmdlet.ShouldProcess("SubCategory $Policy", "Setting $Value")) {
+        try {
+            if (-not (Test-Path -LiteralPath $LocalSecurityPolicyFolder -ErrorAction SilentlyContinue)) {
+                New-Item -ItemType Directory -Path $LocalSecurityPolicyFolder -Force
+            }
+        } catch {
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                throw
+            } else {
+                Write-Warning -Message "Set-SystemAuditPolicyLocalSecurityPolicy - Couldn't create folder $LocalSecurityPolicyFolder. Error: $($_.Exception.Message)"
+            }
+        }
         try {
             $LocalSecurity.Values | ConvertTo-Csv -NoTypeInformation -Delimiter "," | ForEach-Object { $_ -replace '"', '' } | Set-Content -LiteralPath $LocalSecurityPolicy -ErrorAction Stop
             $Message = ''
