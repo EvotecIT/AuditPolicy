@@ -265,87 +265,172 @@
         'Failure'           = 2
         'SuccessAndFailure' = 3
     }
-    $AuditPoliciesByte = [ordered] @{
-        AccountLogon      = [ordered] @{
-            'Credential Validation'              = 122
-            'Kerberos Service Ticket Operations' = 124
-            'Other Account Logon Events'         = 126
-            'Kerberos Authentication Service'    = 128
+
+    $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $ComputerName
+    $Version = [version]$OperatingSystem.OperatingSystemBuild
+
+    if ($Version.Major -ge 10) {
+        # Windows 2016 and above
+        $AuditPoliciesByte = [ordered] @{
+            AccountLogon      = [ordered] @{
+                'Credential Validation'              = 122
+                'Kerberos Service Ticket Operations' = 124
+                'Other Account Logon Events'         = 126
+                'Kerberos Authentication Service'    = 128
+            }
+            AccountManagement = [ordered] @{
+                'User Account Management'         = 102
+                'Computer Account Management'     = 104
+                'Security Group Management'       = 106
+                'Distribution Group Management'   = 108
+                'Application Group Management'    = 110
+                'Other Account Management Events' = 112
+            }
+            DetailedTracking  = [ordered] @{
+                'Process Creation'            = 78
+                'Process Termination'         = 80
+                'DPAPI Activity'              = 82
+                'RPC Events'                  = 84
+                'Plug and Play Events'        = 86
+                'Token Right Adjusted Events' = 88
+            }
+            DSAccess          = [ordered] @{
+                'Directory Service Access'               = 114
+                'Directory Service Changes'              = 116
+                'Directory Service Replication'          = 118
+                'Detailed Directory Service Replication' = 120
+            }
+            LogonLogoff       = [ordered] @{
+                'Logon'                     = 22
+                'Logoff'                    = 24
+                'Account Lockout'           = 26
+                'IPSec Main Mode'           = 28
+                'Special Logon'             = 30
+                'IPSec Quick Mode'          = 32
+                'IPSec Extended Mode'       = 34
+                'Other Logon/Logoff Events' = 36
+                'Network Policy Server'     = 38
+                'User / Device Claims'      = 40
+                'Group Membership'          = 42
+            }
+            ObjectAccess      = [ordered] @{
+                'File System'                    = 44
+                'Registry'                       = 46
+                'Kernel Object'                  = 48
+                'SAM'                            = 50
+                'Other Object Access Events'     = 52
+                'Certification Services'         = 54
+                'Application Generated'          = 56
+                'Handle Manipulation'            = 58
+                'File Share'                     = 60
+                'Filtering Platform Packet Drop' = 62
+                'Filtering Platform Connection'  = 64
+                'Detailed File Share'            = 66
+                'Removable Storage'              = 68
+                'Central Policy Staging'         = 70
+            }
+            PolicyChange      = [ordered] @{
+                'Audit Policy Change'              = 90
+                'Authentication Policy Change'     = 92
+                'Authorization Policy Change'      = 94
+                'MPSSVC Rule-Level Policy Change'  = 96
+                'Filtering Platform Policy Change' = 98
+                'Other Policy Change Events'       = 100
+            }
+            PrivilegeUse      = [ordered] @{
+                'Sensitive Privilege Use'     = 72
+                'Non Sensitive Privilege Use' = 74
+                'Other Privilege Use Events'  = 76
+            }
+            System            = [ordered] @{
+                'Security State Change'     = 12
+                'Security System Extension' = 14
+                'System Integrity'          = 16
+                'IPsec Driver'              = 18
+                'Other System Events'       = 20
+            }
         }
-        AccountManagement = [ordered] @{
-            'User Account Management'         = 102
-            'Computer Account Management'     = 104
-            'Security Group Management'       = 106
-            'Distribution Group Management'   = 108
-            'Application Group Management'    = 110
-            'Other Account Management Events' = 112
-        }
-        DetailedTracking  = [ordered] @{
-            'Process Creation'            = 78
-            'Process Termination'         = 80
-            'DPAPI Activity'              = 82
-            'RPC Events'                  = 84
-            'Plug and Play Events'        = 86
-            'Token Right Adjusted Events' = 88
-        }
-        DSAccess          = [ordered] @{
-            'Directory Service Access'               = 114
-            'Directory Service Changes'              = 116
-            'Directory Service Replication'          = 118
-            'Detailed Directory Service Replication' = 120
-        }
-        LogonLogoff       = [ordered] @{
-            'Logon'                     = 22
-            'Logoff'                    = 24
-            'Account Lockout'           = 26
-            'IPSec Main Mode'           = 28
-            'Special Logon'             = 30
-            'IPSec Quick Mode'          = 32
-            'IPSec Extended Mode'       = 34
-            'Other Logon/Logoff Events' = 36
-            'Network Policy Server'     = 38
-            'User / Device Claims'      = 40
-            'Group Membership'          = 42
-        }
-        ObjectAccess      = [ordered] @{
-            'File System'                    = 44
-            'Registry'                       = 46
-            'Kernel Object'                  = 48
-            'SAM'                            = 50
-            'Other Object Access Events'     = 52
-            'Certification Services'         = 54
-            'Application Generated'          = 56
-            'Handle Manipulation'            = 58
-            'File Share'                     = 60
-            'Filtering Platform Packet Drop' = 62
-            'Filtering Platform Connection'  = 64
-            'Detailed File Share'            = 66
-            'Removable Storage'              = 68
-            'Central Policy Staging'         = 70
-        }
-        PolicyChange      = [ordered] @{
-            'Audit Policy Change'              = 90
-            'Authentication Policy Change'     = 92
-            'Authorization Policy Change'      = 94
-            'MPSSVC Rule-Level Policy Change'  = 96
-            'Filtering Platform Policy Change' = 98
-            'Other Policy Change Events'       = 100
-        }
-        PrivilegeUse      = [ordered] @{
-            'Sensitive Privilege Use'     = 72
-            'Non Sensitive Privilege Use' = 74
-            'Other Privilege Use Events'  = 76
-        }
-        System            = [ordered] @{
-            'Security State Change'     = 12
-            'Security System Extension' = 14
-            'System Integrity'          = 16
-            'IPsec Driver'              = 18
-            'Other System Events'       = 20
+    } else {
+        $AuditPoliciesByte = [ordered] @{
+            AccountLogon      = [ordered] @{
+                'Credential Validation'              = 110
+                'Kerberos Service Ticket Operations' = 112
+                'Other Account Logon Events'         = 114
+                'Kerberos Authentication Service'    = 116
+            }
+            AccountManagement = [ordered] @{
+                'User Account Management'         = 90
+                'Computer Account Management'     = 92
+                'Security Group Management'       = 94
+                'Distribution Group Management'   = 96
+                'Application Group Management'    = 98
+                'Other Account Management Events' = 100
+            }
+            DetailedTracking  = [ordered] @{
+                'Process Creation'            = 70
+                'Process Termination'         = 72
+                'DPAPI Activity'              = 74
+                'RPC Events'                  = 76
+                #'Plug and Play Events'        = 86
+                #'Token Right Adjusted Events' = 88
+            }
+            DSAccess          = [ordered] @{
+                'Directory Service Access'               = 102
+                'Directory Service Changes'              = 104
+                'Directory Service Replication'          = 106
+                'Detailed Directory Service Replication' = 108
+            }
+            LogonLogoff       = [ordered] @{
+                'Logon'                     = 22
+                'Logoff'                    = 24
+                'Account Lockout'           = 26
+                'IPSec Main Mode'           = 28
+                'Special Logon'             = 30
+                'IPSec Quick Mode'          = 32
+                'IPSec Extended Mode'       = 34
+                'Other Logon/Logoff Events' = 36
+                'Network Policy Server'     = 38
+                #'User / Device Claims'      = 40
+                #'Group Membership'          = 42
+            }
+            ObjectAccess      = [ordered] @{
+                'File System'                    = 40
+                'Registry'                       = 42
+                'Kernel Object'                  = 44
+                'SAM'                            = 46
+                'Other Object Access Events'     = 48
+                'Certification Services'         = 50
+                'Application Generated'          = 52
+                'Handle Manipulation'            = 54
+                'File Share'                     = 56
+                'Filtering Platform Packet Drop' = 58
+                'Filtering Platform Connection'  = 60
+                'Detailed File Share'            = 62
+                #'Removable Storage'              = 68
+                #'Central Policy Staging'         = 70
+            }
+            PolicyChange      = [ordered] @{
+                'Audit Policy Change'              = 78
+                'Authentication Policy Change'     = 80
+                'Authorization Policy Change'      = 82
+                'MPSSVC Rule-Level Policy Change'  = 84
+                'Filtering Platform Policy Change' = 86
+                'Other Policy Change Events'       = 88
+            }
+            PrivilegeUse      = [ordered] @{
+                'Sensitive Privilege Use'     = 64
+                'Non Sensitive Privilege Use' = 66
+                'Other Privilege Use Events'  = 68
+            }
+            System            = [ordered] @{
+                'Security State Change'     = 12
+                'Security System Extension' = 14
+                'System Integrity'          = 16
+                'IPsec Driver'              = 18
+                'Other System Events'       = 20
+            }
         }
     }
-
-
 
     $BoundParameters = $PSBoundParameters
     $CurrentParameterSet = $PsCmdlet.ParameterSetName
@@ -394,11 +479,31 @@
             } else {
                 $ByteNumber = $AuditPoliciesByte[$CurrentParameterSet][$ChosenParameter]
             }
+
             $ExpectedValue = $AuditValues[$Value]
+            $ExpectedTranslatedValue = [AuditPolicies.Events] $ExpectedValue
+
+            if (-not $ByteNumber) {
+                if (-not $Suppress) {
+                    if ($CurrentParameterSet -eq 'AllPolicies') {
+                        $ChosenParameter = $Policy
+                    } else {
+                        $ChosenParameter = $ChosenParameter
+                    }
+                    return [PSCustomObject] @{
+                        'Policy' = $ChosenParameter
+                        'Value'  = $ExpectedTranslatedValue
+                        'Result' = 'Failed'
+                        'Error'  = "Policy '$ChosenParameter' doesn't exist on this system version system. Please use a valid policy name."
+                    }
+                }
+                return
+            }
+
 
             $CurrentValue = $Audit.PSValue[$ByteNumber]
             $CurrentTranslatedValue = [AuditPolicies.Events] $CurrentValue
-            $ExpectedTranslatedValue = [AuditPolicies.Events] $ExpectedValue
+
 
             Write-Verbose -Message "Set-SystemAuditPolicy - Current value for $CurrentParameterSet\$ChosenParameter is $CurrentTranslatedValue ($CurrentValue) to be replaced with $ExpectedTranslatedValue ($ExpectedValue)"
             if ($CurrentTranslatedValue -ne $ExpectedTranslatedValue) {
