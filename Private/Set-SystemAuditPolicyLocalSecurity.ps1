@@ -208,7 +208,7 @@
     if ($PSCmdlet.ShouldProcess("SubCategory $Policy", "Setting $Value")) {
         try {
             if (-not (Test-Path -LiteralPath $LocalSecurityPolicyFolder -ErrorAction SilentlyContinue)) {
-                New-Item -ItemType Directory -Path $LocalSecurityPolicyFolder -Force
+                $null = New-Item -ItemType Directory -Path $LocalSecurityPolicyFolder -Force
             }
         } catch {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
