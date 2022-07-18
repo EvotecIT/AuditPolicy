@@ -23,19 +23,29 @@
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory)][string] $Identity,
-        [System.Security.AccessControl.RegistryRights] $Permissions = [System.Security.AccessControl.RegistryRights]::FullControl
+        [System.Security.AccessControl.RegistryRights] $Permissions = [System.Security.AccessControl.RegistryRights]::FullControl,
+        [string] $ComputerName
     )
     try {
-        $RegistryKeyControl = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(
-            'SECURITY',
-            [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
-            [System.Security.AccessControl.RegistryRights]::ChangePermissions
-        )
+        if ($ComputerName) {
+            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LOCAL', $ComputerName, 0 )
+            $RegistryKeyControl = $BaseHive.OpenSubKey(
+                'SECURITY',
+                [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
+                [System.Security.AccessControl.RegistryRights]::ChangePermissions
+            )
+        } else {
+            $RegistryKeyControl = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(
+                'SECURITY',
+                [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
+                [System.Security.AccessControl.RegistryRights]::ChangePermissions
+            )
+        }
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw
         } else {
-            Write-Warning -Message "Set-SystemAuditPolicyPermissions - Opening registry failed $($_.Exception.Message)"
+            Write-Warning -Message "Remove-SystemAuditPolicyPermissions - Opening registry failed $($_.Exception.Message)"
         }
         return
     }
@@ -54,18 +64,26 @@
         $PropagationFlag,
         $AccessType
     )
-    if ($PSCmdlet.ShouldProcess("Registry HKLM\SECURITY", "Adding 'FullControl' access to $Identity for SECURITY subkey")) {
+    if ($PSCmdlet.ShouldProcess("Registry HKLM\SECURITY", "Removing 'FullControl' access to $Identity for SECURITY subkey")) {
         try {
             $Output = $AccessControlList.RemoveAccessRule($AccessRule)
         } catch {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                if ($null -ne $BaseHive) {
+                    $BaseHive.Close()
+                    $BaseHive.Dispose()
+                }
                 throw
             } else {
-                Write-Warning -Message "Set-SystemAuditPolicyPermissions - Adding access rule failed $($_.Exception.Message)"
+                Write-Warning -Message "Remove-SystemAuditPolicyPermissions - Removing access rule failed $($_.Exception.Message)"
             }
         }
         if ($Output) {
             $RegistryKeyControl.SetAccessControl($AccessControlList)
         }
+    }
+    if ($null -ne $BaseHive) {
+        $BaseHive.Close()
+        $BaseHive.Dispose()
     }
 }

@@ -23,14 +23,24 @@
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory)][string] $Identity,
-        [System.Security.AccessControl.RegistryRights] $Permissions = [System.Security.AccessControl.RegistryRights]::FullControl
+        [System.Security.AccessControl.RegistryRights] $Permissions = [System.Security.AccessControl.RegistryRights]::FullControl,
+        [string] $ComputerName
     )
     try {
-        $RegistryKeyControl = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(
-            'SECURITY',
-            [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
-            [System.Security.AccessControl.RegistryRights]::ChangePermissions
-        )
+        if ($ComputerName) {
+            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LOCAL', $ComputerName, 0 )
+            $RegistryKeyControl = $BaseHive.OpenSubKey(
+                'SECURITY',
+                [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
+                [System.Security.AccessControl.RegistryRights]::ChangePermissions
+            )
+        } else {
+            $RegistryKeyControl = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(
+                'SECURITY',
+                [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,
+                [System.Security.AccessControl.RegistryRights]::ChangePermissions
+            )
+        }
     } catch {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw
