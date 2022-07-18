@@ -26,10 +26,11 @@
 This module was tested using Windows PowerShell 5.1 on:
 - Windows 11
 - Windows 2016
+- Windows 2012 R2
 
 It should work correctly on Windows 2019, Windows 2022, and Windows 10.
-I belive it should work on Windows 2012+ but that requires confirmation.
-For Windows 2008 the registry information may not be the same, so probably won't work correctly.
+I belive it should work on Windows 2012 and earlier (assuming Windows PowerShell 5.1 will work) but that requires confirmation.
+Registry values are different and I've not tested in on those systems.
 As it's already not supported by Microsoft there's no need to investigate this.
 
 

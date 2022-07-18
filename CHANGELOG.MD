@@ -1,4 +1,8 @@
-﻿#### 0.0.6
+﻿#### 0.0.7
+- Fixes support for Windows 2012 R2
+- Fixes setting permissions for remote registry which would not work in earlier versions
+
+#### 0.0.6
 - Detection of current settings with support for 2012R2 and earlier versions of Windows.
 - Fix for `Set-SystemAuditPolicy` when using LocalSecurityPolicy returning new object on creation of directory
 
