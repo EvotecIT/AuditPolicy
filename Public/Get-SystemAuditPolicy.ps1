@@ -134,6 +134,7 @@
         $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $ComputerName
         $Version = [version]$OperatingSystem.OperatingSystemBuild
         if ($Version.Major -eq 6 -and $Version.Minor -eq 3) {
+            Write-Verbose -Message "Get-SystemAuditPolicy for Windows 2012 R2"
             # Windows Server 2012 R2
             $AuditPolicies = [ordered] @{
                 System            = [ordered] @{
@@ -215,6 +216,7 @@
                 }
             }
         } elseif ($Version.Major -lt 6) {
+            Write-Verbose -Message "Get-SystemAuditPolicy for Windows 2012 and earlier (not really tested)"
             # Windows 2012 and earlier
             $AuditPolicies = [ordered] @{
                 System            = [ordered] @{
@@ -296,6 +298,7 @@
                 }
             }
         } else {
+            Write-Verbose -Message "Get-SystemAuditPolicy for Windows 2016/Windows 10 and later"
             # Windows 2016 and later
             $AuditPolicies = [ordered] @{
                 System            = [ordered] @{
