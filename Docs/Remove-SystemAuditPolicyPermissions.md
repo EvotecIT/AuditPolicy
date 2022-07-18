@@ -13,8 +13,8 @@ Removes audit policy permissions from a user or group.
 ## SYNTAX
 
 ```
-Remove-SystemAuditPolicyPermissions [-Identity] <String> [[-Permissions] <RegistryRights>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Remove-SystemAuditPolicyPermissions [-Identity] <String> [[-Permissions] <RegistryRights>]
+ [[-ComputerName] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,6 +59,21 @@ Accepted values: QueryValues, SetValue, CreateSubKey, EnumerateSubKeys, Notify, 
 Required: False
 Position: 2
 Default value: FullControl
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ComputerName
+{{ Fill ComputerName Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
