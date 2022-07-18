@@ -146,7 +146,6 @@
             "Detailed Directory Service Replication",
             #Account Logon#
             "Kerberos Service Ticket Operations",
-            "Kerberos Service Ticket Operations",
             "Other Account Logon Events",
             "Kerberos Authentication Service",
             "Credential Validation"
@@ -268,7 +267,6 @@
 
     $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $ComputerName
     $Version = [version]$OperatingSystem.OperatingSystemBuild
-
     if ($Version.Major -ge 10) {
         # Windows 2016 and above
         $AuditPoliciesByte = [ordered] @{
@@ -350,6 +348,87 @@
                 'Other System Events'       = 20
             }
         }
+
+    } elseif ($Version.Major -eq 6 -and $Version.Minor -eq 3) {
+        $AuditPoliciesByte = [ordered] @{
+            AccountLogon      = [ordered] @{
+                'Credential Validation'              = 118
+                'Kerberos Service Ticket Operations' = 120
+                'Other Account Logon Events'         = 122
+                'Kerberos Authentication Service'    = 124
+            }
+            AccountManagement = [ordered] @{
+                'User Account Management'         = 98
+                'Computer Account Management'     = 100
+                'Security Group Management'       = 102
+                'Distribution Group Management'   = 104
+                'Application Group Management'    = 106
+                'Other Account Management Events' = 108
+            }
+            DetailedTracking  = [ordered] @{
+                'Process Creation'     = 76
+                'Process Termination'  = 78
+                'DPAPI Activity'       = 80
+                'RPC Events'           = 82
+                'Plug and Play Events' = 84
+                #'Token Right Adjusted Events' = 88
+            }
+            DSAccess          = [ordered] @{
+                'Directory Service Access'               = 110
+                'Directory Service Changes'              = 112
+                'Directory Service Replication'          = 114
+                'Detailed Directory Service Replication' = 116
+            }
+            LogonLogoff       = [ordered] @{
+                'Logon'                     = 22
+                'Logoff'                    = 24
+                'Account Lockout'           = 26
+                'IPSec Main Mode'           = 28
+                'Special Logon'             = 30
+                'IPSec Quick Mode'          = 32
+                'IPSec Extended Mode'       = 34
+                'Other Logon/Logoff Events' = 36
+                'Network Policy Server'     = 38
+                'User / Device Claims'      = 40
+                #'Group Membership'          = 42
+            }
+            ObjectAccess      = [ordered] @{
+                'File System'                    = 42
+                'Registry'                       = 44
+                'Kernel Object'                  = 46
+                'SAM'                            = 48
+                'Other Object Access Events'     = 50
+                'Certification Services'         = 52
+                'Application Generated'          = 54
+                'Handle Manipulation'            = 56
+                'File Share'                     = 58
+                'Filtering Platform Packet Drop' = 60
+                'Filtering Platform Connection'  = 62
+                'Detailed File Share'            = 64
+                'Removable Storage'              = 66
+                'Central Policy Staging'         = 68
+            }
+            PolicyChange      = [ordered] @{
+                'Audit Policy Change'              = 86
+                'Authentication Policy Change'     = 88
+                'Authorization Policy Change'      = 90
+                'MPSSVC Rule-Level Policy Change'  = 92
+                'Filtering Platform Policy Change' = 94
+                'Other Policy Change Events'       = 96
+            }
+            PrivilegeUse      = [ordered] @{
+                'Sensitive Privilege Use'     = 70
+                'Non Sensitive Privilege Use' = 72
+                'Other Privilege Use Events'  = 74
+            }
+            System            = [ordered] @{
+                'Security State Change'     = 12
+                'Security System Extension' = 14
+                'System Integrity'          = 16
+                'IPsec Driver'              = 18
+                'Other System Events'       = 20
+            }
+        }
     } else {
         $AuditPoliciesByte = [ordered] @{
             AccountLogon      = [ordered] @{
@@ -367,10 +446,10 @@
                 'Other Account Management Events' = 100
             }
             DetailedTracking  = [ordered] @{
-                'Process Creation'            = 70
-                'Process Termination'         = 72
-                'DPAPI Activity'              = 74
-                'RPC Events'                  = 76
+                'Process Creation'    = 70
+                'Process Termination' = 72
+                'DPAPI Activity'      = 74
+                'RPC Events'          = 76
                 #'Plug and Play Events'        = 86
                 #'Token Right Adjusted Events' = 88
             }
@@ -452,7 +531,7 @@
         $IsSystem = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
         if (-not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
-            Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false
+            Set-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false -ComputerName $ComputerName
         }
 
         $Audit = Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\SECURITY\Policy\PolAdtEv" -Key "" -ComputerName $ComputerName
@@ -537,7 +616,7 @@
         }
         if (-not $IsSystem) {
             $SID = ConvertFrom-SID -SID "S-1-5-32-544"
-            Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false
+            Remove-SystemAuditPolicyPermissions -Identity $SID.Name -Permissions FullControl -WhatIf:$false -ComputerName $ComputerName
         }
         if (-not $Suppress) {
             [PSCustomObject] @{
