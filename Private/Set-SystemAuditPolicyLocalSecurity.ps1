@@ -93,7 +93,6 @@
             "Detailed Directory Service Replication",
             #Account Logon#
             "Kerberos Service Ticket Operations",
-            "Kerberos Service Ticket Operations",
             "Other Account Logon Events",
             "Kerberos Authentication Service",
             "Credential Validation"
