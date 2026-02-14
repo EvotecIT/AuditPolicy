@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://dev.azure.com/evotecpl/AuditPolicy/_build/latest?definitionId=3"><img src="https://img.shields.io/azure-devops/build/evotecpl/a5ce5d3e-9ae2-49a0-9905-53eb41205fc9/7?label=Azure%20Pipelines&style=flat-square"></a>
   <a href="https://www.powershellgallery.com/packages/AuditPolicy"><img src="https://img.shields.io/powershellgallery/v/AuditPolicy.svg?style=flat-square"></a>
-  <a href="https://www.powershellgallery.com/packages/AuditPolicy"><img src="https://img.shields.io/powershellgallery/vpre/AuditPolicy.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square"></a>
+  <a href="https://www.powershellgallery.com/packages/AuditPolicy"><img src="https://img.shields.io/powershellgallery/v/AuditPolicy.svg?label=powershell%20gallery%20preview&colorB=yellow&style=flat-square&include_prereleases"></a>
   <a href="https://github.com/EvotecIT/AuditPolicy"><img src="https://img.shields.io/github/license/EvotecIT/AuditPolicy.svg?style=flat-square"></a>
 
 </p>
